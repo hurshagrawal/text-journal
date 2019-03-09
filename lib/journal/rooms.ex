@@ -3,4 +3,10 @@ defmodule Journal.Rooms do
   alias Journal.Repo
 
   alias Journal.Accounts.User
+  alias Journal.Rooms.Room
+  alias Journal.Rooms.Post
+  alias Journal.Rooms.RoomMembership
+
+
+
 end

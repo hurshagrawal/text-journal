@@ -3,13 +3,13 @@ defmodule Journal.Repo.Migrations.CreateUsers do
 
   def change do
     create table(:users) do
-      add :name, :string
-      add :verification_code, :string
-      add :phone, :integer
-      add :last_login_at, :naive_datetime
+      add(:name, :string, null: false)
+      add(:verification_code, :string)
+      add(:phone_number, :integer, null: false)
+      add(:phone_number_verified, :boolean, null: false, default: false)
+      add(:last_login_at, :naive_datetime)
 
       timestamps()
     end
-
   end
 end
