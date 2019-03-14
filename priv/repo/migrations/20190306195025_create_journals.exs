@@ -1,8 +1,8 @@
-defmodule Journal.Repo.Migrations.CreateRooms do
+defmodule Journal.Repo.Migrations.CreateJournals do
   use Ecto.Migration
 
   def change do
-    create table(:rooms) do
+    create table(:journals) do
       add(:type, :string, null: false)
       add(:phone_number, :integer, null: false)
 

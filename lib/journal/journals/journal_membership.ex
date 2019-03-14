@@ -1,19 +1,18 @@
-defmodule Journal.Rooms.RoomMembership do
+defmodule Journal.Journals.JournalMembership do
   use Ecto.Schema
   import Ecto.Changeset
 
-
-  schema "room_memberships" do
+  schema "journal_memberships" do
     field :type, :string
-    field :room_id, :id
+    field :journal_id, :id
     field :user_id, :id
 
     timestamps()
   end
 
   @doc false
-  def changeset(room_membership, attrs) do
-    room_membership
+  def changeset(journal_membership, attrs) do
+    journal_membership
     |> cast(attrs, [:type])
     |> validate_required([:type])
   end
