@@ -1,4 +1,6 @@
-<%= form_for @changeset, @action, fn f -> %>
+<h1>Welcome!</h1>
+
+<%= form_for @changeset, Routes.user_path(@conn, :create), fn f -> %>
   <%= if @changeset.action do %>
     <div class="alert alert-danger">
       <p>Oops, something went wrong! Please check the errors below.</p>
@@ -9,13 +11,9 @@
   <%= text_input f, :name %>
   <%= error_tag f, :name %>
 
-  <%= label f, :verification_code %>
-  <%= text_input f, :verification_code %>
-  <%= error_tag f, :verification_code %>
-
-  <%= label f, :phone %>
-  <%= number_input f, :phone %>
-  <%= error_tag f, :phone %>
+  <%= label f, :phone_number %>
+  <%= number_input f, :phone_number %>
+  <%= error_tag f, :phone_number %>
 
   <%= label f, :last_login_at %>
   <%= datetime_select f, :last_login_at %>

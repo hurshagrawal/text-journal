@@ -6,30 +6,9 @@ defmodule JournalWeb.JournalController do
   alias Journal.Journals
   alias Journal.Journals.Journal
 
-  def new(conn, _params) do
-    changeset = Accounts.change_user(%User{})
-    render(conn, "new.html", changeset: changeset)
+  def index(conn, _params, current_user) do
   end
 
-  def create(conn, %{"user" => user_params}) do
-    case Accounts.create_user(user_params) do
-      {:ok, user} ->
-        conn
-        |> put_flash(:info, "User created successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
-
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
-    end
-
-    # Send verification code to the phone number
-  end
-
-  def verify_phone(conn, %{"code" => code}) do
-    # Verify the phone number
-    #   if verified
-    render(conn, "confirmation.html")
-    #   if errored
-    render(conn, "verify.html", error: "That code doesn't match. Try again?")
+  def update(conn, %{"journal" => journal_params}, current_user) do
   end
 end

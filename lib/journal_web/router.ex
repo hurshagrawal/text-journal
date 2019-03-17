@@ -16,7 +16,14 @@ defmodule JournalWeb.Router do
   scope "/", JournalWeb do
     pipe_through :browser
 
-    resources "/", UserController
+    get "/", UserController, :index
+    post "/users", UserController, :create
+    post "/users/login", UserController, :login
+    get "/users/verify", UserController, :verify_index
+    post "/users/verify", UserController, :verify_user
+
+    post "/journal", JournalController, :index
+    put "/journal", JournalController, :update
   end
 
   # Other scopes may use custom stacks.

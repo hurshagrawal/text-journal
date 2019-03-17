@@ -6,8 +6,18 @@ defmodule Journal.AccountsTest do
   describe "users" do
     alias Journal.Accounts.User
 
-    @valid_attrs %{last_login_at: ~N[2010-04-17 14:00:00], name: "some name", phone: 42, verification_code: "some verification_code"}
-    @update_attrs %{last_login_at: ~N[2011-05-18 15:01:01], name: "some updated name", phone: 43, verification_code: "some updated verification_code"}
+    @valid_attrs %{
+      last_login_at: ~N[2010-04-17 14:00:00],
+      name: "some name",
+      phone: 42,
+      verification_code: "some verification_code"
+    }
+    @update_attrs %{
+      last_login_at: ~N[2011-05-18 15:01:01],
+      name: "some updated name",
+      phone: 43,
+      verification_code: "some updated verification_code"
+    }
     @invalid_attrs %{last_login_at: nil, name: nil, phone: nil, verification_code: nil}
 
     def user_fixture(attrs \\ %{}) do

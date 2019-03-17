@@ -6,19 +6,8 @@ defmodule Journal.Accounts do
 
   @doc """
   Gets a single user.
-
-  Raises `Ecto.NoResultsError` if the User does not exist.
-
-  ## Examples
-
-      iex> get_user!(123)
-      %User{}
-
-      iex> get_user!(456)
-      ** (Ecto.NoResultsError)
-
   """
-  def get_user!(id), do: Repo.get!(User, id)
+  def get_user(id), do: Repo.get(User, id)
 
   @doc """
   Creates a user.
@@ -39,15 +28,14 @@ defmodule Journal.Accounts do
   end
 
   @doc """
-  Returns an `%Ecto.Changeset{}` for tracking user changes.
-
-  ## Examples
-
-      iex> change_user(user)
-      %Ecto.Changeset{source: %User{}}
-
+  Regenerates a user's verification code. Returns user.
   """
-  def change_user(%User{} = user) do
-    User.changeset(user, %{})
+  def regenerate_verification_code(user) do
+  end
+
+  def sanitize_name(name) do
+  end
+
+  def sanitize_phone_number(phone_number) do
   end
 end
