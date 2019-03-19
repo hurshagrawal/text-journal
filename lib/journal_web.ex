@@ -24,6 +24,8 @@ defmodule JournalWeb do
       import Plug.Conn
       import JournalWeb.Gettext
       alias JournalWeb.Router.Helpers, as: Routes
+
+      import JournalWeb.Controllers.Helpers
     end
   end
 
@@ -34,7 +36,8 @@ defmodule JournalWeb do
         namespace: JournalWeb
 
       # Import convenience functions from controllers
-      import Phoenix.Controller, only: [get_flash: 1, get_flash: 2, view_module: 1]
+      import Phoenix.Controller,
+        only: [get_flash: 1, get_flash: 2, view_module: 1]
 
       # Use all HTML functionality (forms, tags, etc)
       use Phoenix.HTML

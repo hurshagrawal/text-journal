@@ -24,7 +24,7 @@ defmodule JournalWeb.GuardedController do
         apply(__MODULE__, action_name(conn), [
           conn,
           conn.params,
-          JournalWeb.Guardian.Plug.current_resource(conn)
+          get_current_user(conn)
         ])
       end
     end

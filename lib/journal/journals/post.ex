@@ -4,8 +4,9 @@ defmodule Journal.Journals.Post do
 
   schema "posts" do
     field :content, :string
-    field :journal_id, :id
-    field :user_id, :id
+
+    belongs_to :journal, Journal.Journals.Journal
+    belongs_to :user, Journal.Accounts.User
 
     timestamps()
   end
@@ -13,7 +14,7 @@ defmodule Journal.Journals.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:content])
-    |> validate_required([:content])
+    |> cast(attrs, [:content, :journal_id, :user_id])
+    |> validate_required([:content, :journal_id, :user_id])
   end
 end

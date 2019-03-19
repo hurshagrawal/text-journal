@@ -31,7 +31,8 @@ defmodule JournalWeb.Router do
     get "/users/verify", UserController, :verify_index
     post "/users/verify", UserController, :verify_user
 
-    post "/journal", JournalController, :index
+    get "/journal", JournalController, :index
+    post "/journal", JournalController, :create
     put "/journal", JournalController, :update
   end
 

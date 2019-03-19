@@ -4,8 +4,9 @@ defmodule Journal.Journals.JournalMembership do
 
   schema "journal_memberships" do
     field :type, :string
-    field :journal_id, :id
-    field :user_id, :id
+
+    belongs_to :journal, Journal.Journals.Journal
+    belongs_to :user, Journal.Accounts.User
 
     timestamps()
   end
@@ -13,7 +14,7 @@ defmodule Journal.Journals.JournalMembership do
   @doc false
   def changeset(journal_membership, attrs) do
     journal_membership
-    |> cast(attrs, [:type])
-    |> validate_required([:type])
+    |> cast(attrs, [:type, :journal_id, :user_id])
+    |> validate_required([:type, :journal_id, :user_id])
   end
 end

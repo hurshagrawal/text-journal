@@ -9,6 +9,14 @@ defmodule Journal.Accounts.User do
     field :phone_number_verified, :boolean
     field :verification_code, :integer
 
+    has_many :journal_memberships, Journal.Journals.JournalMembership
+    has_many :journals, through: [:journal_memberships, :journal]
+
+    has_many :owned_journal_memberships, Journal.Journals.JournalMembership,
+      where: [type: "owner"]
+
+    has_many :owned_journals, through: [:owned_journal_memberships, :journal]
+
     timestamps()
   end
 
