@@ -7,6 +7,15 @@ defmodule JournalWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+
+    plug(
+      Guardian.Plug.Pipeline,
+      error_handler: JournalWeb.UserController,
+      module: JournalWeb.Guardian
+    )
+
+    plug(Guardian.Plug.VerifySession, claims: %{"typ" => "access"})
+    plug(Guardian.Plug.LoadResource, allow_blank: true)
   end
 
   pipeline :api do

@@ -31,11 +31,8 @@ defmodule Journal.Accounts do
   Regenerates a user's verification code. Returns user.
   """
   def regenerate_verification_code(user) do
-  end
-
-  def sanitize_name(name) do
-  end
-
-  def sanitize_phone_number(phone_number) do
+    user
+    |> User.changeset(%{verification_code: Enum.random(10_000..99_999)})
+    |> Repo.update()
   end
 end

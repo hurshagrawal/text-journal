@@ -5,9 +5,9 @@ defmodule Journal.Accounts.User do
   schema "users" do
     field :last_login_at, :naive_datetime
     field :name, :string
-    field :phone_number, :integer
+    field :phone_number, :string
     field :phone_number_verified, :boolean
-    field :verification_code, :string
+    field :verification_code, :integer
 
     timestamps()
   end
@@ -22,6 +22,31 @@ defmodule Journal.Accounts.User do
       :phone_number_verified,
       :last_login_at
     ])
-    |> validate_required([:name, :phone_number, :phone_number_verified, :last_login_at])
+    |> sanitize_name()
+    |> sanitize_phone_number()
+    |> validate_required([:name, :phone_number])
+  end
+
+  def sanitize_name(%Ecto.Changeset{} = changeset) do
+    update_change(changeset, :name, &String.trim/1)
+  end
+
+  def sanitize_phone_number(%Ecto.Changeset{} = changeset) do
+    new_phone_number = get_change(changeset, :phone_number)
+
+    if new_phone_number == nil do
+      changeset
+    else
+      with {:ok, phone_number} <- ExPhoneNumber.parse(new_phone_number, "US"),
+           true <- ExPhoneNumber.is_valid_number?(phone_number) do
+        update_change(changeset, :phone_number, fn new_phone_number ->
+          {:ok, phone_number} = ExPhoneNumber.parse(new_phone_number, "US")
+          ExPhoneNumber.format(phone_number, :e164)
+        end)
+      else
+        _ ->
+          add_error(changeset, :phone_number, "is invalid")
+      end
+    end
   end
 end

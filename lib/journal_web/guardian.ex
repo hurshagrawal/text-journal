@@ -1,4 +1,4 @@
-defmodule Journal.Accounts.Guardian do
+defmodule JournalWeb.Guardian do
   use Guardian, otp_app: :journal
 
   alias Journal.Accounts

@@ -25,7 +25,7 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :journal, Journal.Accounts.Guardian,
+config :journal, JournalWeb.Guardian,
   issuer: "journal",
   secret_key: "b7z3rikSEyhWqnJb3pN2WsAImPRROJCENNxYTor7cK2Rg+N/9Ml+5rBvCn8KpI4e",
   allowed_algos: ["HS256"],

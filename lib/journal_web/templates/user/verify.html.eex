@@ -1,32 +1,10 @@
-<h1>Listing Users</h1>
+<h1>Please type in your verification code.</h1>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Verification code</th>
-      <th>Phone</th>
-      <th>Last login at</th>
+<%= form_for @conn, Routes.user_path(@conn, :verify_user), fn f -> %>
+  <%= label f, :code %>
+  <%= number_input f, :code %>
 
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for user <- @users do %>
-    <tr>
-      <td><%= user.name %></td>
-      <td><%= user.verification_code %></td>
-      <td><%= user.phone %></td>
-      <td><%= user.last_login_at %></td>
-
-      <td>
-        <%= link "Show", to: Routes.user_path(@conn, :show, user) %>
-        <%= link "Edit", to: Routes.user_path(@conn, :edit, user) %>
-        <%= link "Delete", to: Routes.user_path(@conn, :delete, user), method: :delete, data: [confirm: "Are you sure?"] %>
-      </td>
-    </tr>
+  <div>
+    <%= submit "Log in" %>
+  </div>
 <% end %>
-  </tbody>
-</table>
-
-<span><%= link "New User", to: Routes.user_path(@conn, :new) %></span>
