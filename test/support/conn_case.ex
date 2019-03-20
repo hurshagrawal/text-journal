@@ -1,4 +1,4 @@
-defmodule JournalWeb.ConnCase do
+defmodule QuiltWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -19,18 +19,18 @@ defmodule JournalWeb.ConnCase do
     quote do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
-      alias JournalWeb.Router.Helpers, as: Routes
+      alias QuiltWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint JournalWeb.Endpoint
+      @endpoint QuiltWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Journal.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Quilt.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Journal.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Quilt.Repo, {:shared, self()})
     end
 
     {:ok, conn: Phoenix.ConnTest.build_conn()}

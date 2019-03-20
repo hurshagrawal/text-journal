@@ -6,7 +6,7 @@ use Mix.Config
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :journal, JournalWeb.Endpoint,
+config :quilt, QuiltWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -46,13 +46,13 @@ config :journal, JournalWeb.Endpoint,
 # different ports.
 
 # Watch static and templates for browser reloading.
-config :journal, JournalWeb.Endpoint,
+config :quilt, QuiltWeb.Endpoint,
   live_reload: [
     patterns: [
       ~r{priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$},
       ~r{priv/gettext/.*(po)$},
-      ~r{lib/journal_web/views/.*(ex)$},
-      ~r{lib/journal_web/templates/.*(eex)$}
+      ~r{lib/quilt_web/views/.*(ex)$},
+      ~r{lib/quilt_web/templates/.*(eex)$}
     ]
   ]
 
@@ -67,9 +67,9 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 # Configure your database
-config :journal, Journal.Repo,
+config :quilt, Quilt.Repo,
   username: "postgres",
   password: "postgres",
-  database: "journal_dev",
+  database: "quilt_dev",
   hostname: "localhost",
   pool_size: 10

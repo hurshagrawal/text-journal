@@ -7,15 +7,16 @@
 # General application configuration
 use Mix.Config
 
-config :journal,
-  ecto_repos: [Journal.Repo]
+config :quilt,
+  ecto_repos: [Quilt.Repo]
 
 # Configures the endpoint
-config :journal, JournalWeb.Endpoint,
+config :quilt, QuiltWeb.Endpoint,
   url: [host: "localhost"],
-  secret_key_base: "NTxq5AI3v0QaKrF71e3/uST9iar1z8c/yobpY86XaDYnv2GmOSzMg3pxL6INsm4w",
-  render_errors: [view: JournalWeb.ErrorView, accepts: ~w(html json)],
-  pubsub: [name: Journal.PubSub, adapter: Phoenix.PubSub.PG2]
+  secret_key_base:
+    "NTxq5AI3v0QaKrF71e3/uST9iar1z8c/yobpY86XaDYnv2GmOSzMg3pxL6INsm4w",
+  render_errors: [view: QuiltWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: Quilt.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,
@@ -25,9 +26,10 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-config :journal, JournalWeb.Guardian,
-  issuer: "journal",
-  secret_key: "b7z3rikSEyhWqnJb3pN2WsAImPRROJCENNxYTor7cK2Rg+N/9Ml+5rBvCn8KpI4e",
+config :quilt, QuiltWeb.Guardian,
+  issuer: "quilt",
+  secret_key:
+    "b7z3rikSEyhWqnJb3pN2WsAImPRROJCENNxYTor7cK2Rg+N/9Ml+5rBvCn8KpI4e",
   allowed_algos: ["HS256"],
   ttl: {90, :days}
 

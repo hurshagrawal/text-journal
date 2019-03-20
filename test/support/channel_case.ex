@@ -1,4 +1,4 @@
-defmodule JournalWeb.ChannelCase do
+defmodule QuiltWeb.ChannelCase do
   @moduledoc """
   This module defines the test case to be used by
   channel tests.
@@ -21,15 +21,15 @@ defmodule JournalWeb.ChannelCase do
       use Phoenix.ChannelTest
 
       # The default endpoint for testing
-      @endpoint JournalWeb.Endpoint
+      @endpoint QuiltWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Journal.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Quilt.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Journal.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(Quilt.Repo, {:shared, self()})
     end
 
     :ok

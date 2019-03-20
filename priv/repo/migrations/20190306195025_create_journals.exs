@@ -1,4 +1,4 @@
-defmodule Journal.Repo.Migrations.CreateJournals do
+defmodule Quilt.Repo.Migrations.CreateJournals do
   use Ecto.Migration
 
   def change do

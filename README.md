@@ -1,4 +1,4 @@
-# Journal
+# Quilt
 
 To start your Phoenix server:
 
