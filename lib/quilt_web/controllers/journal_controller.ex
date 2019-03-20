@@ -10,8 +10,20 @@ defmodule QuiltWeb.JournalController do
   plug :ensure_authenticated
 
   def index(conn, _params, current_user) do
-    journal = Content.get_user_journal(current_user)
-    render(conn, "index.html", journal: journal)
+    if journal = Content.get_user_journal(current_user) do
+      subscriber_count = Content.get_journal_subscribers_count(journal)
+      posts_count = Content.get_journal_owner_posts_count(journal)
+      replies_count = Content.get_journal_replies_count(journal)
+
+      render(conn, "index.html",
+        journal: journal,
+        subscriber_count: subscriber_count,
+        posts_count: posts_count,
+        replies_count: replies_count
+      )
+    else
+      render(conn, "index.html")
+    end
   end
 
   def create(conn, %{"name" => name}, current_user) do
@@ -30,6 +42,11 @@ defmodule QuiltWeb.JournalController do
     end
   end
 
-  def update(conn, %{"journal" => journal_params}, current_user) do
+  def update(
+        conn,
+        %{"name" => name, "onboarding_text" => onboarding_text},
+        current_user
+      ) do
+    conn
   end
 end

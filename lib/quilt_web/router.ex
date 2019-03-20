@@ -34,7 +34,7 @@ defmodule QuiltWeb.Router do
 
     get "/journal", JournalController, :index
     post "/journal", JournalController, :create
-    put "/journal", JournalController, :update
+    put "/journal/:id", JournalController, :update
   end
 
   # Other scopes may use custom stacks.

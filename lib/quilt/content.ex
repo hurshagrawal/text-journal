@@ -19,6 +19,44 @@ defmodule Quilt.Content do
     |> Repo.one()
   end
 
+  def get_journal_owner_id(journal) do
+    owner_membership =
+      journal
+      |> Ecto.assoc(:owner_journal_memberships)
+      |> Repo.one()
+
+    if owner_membership do
+      owner_membership.user_id
+    else
+      nil
+    end
+  end
+
+  def get_journal_subscribers_count(journal) do
+    journal
+    |> Ecto.assoc(:journal_memberships)
+    |> JournalMembership.without_owner()
+    |> Repo.aggregate(:count, :id)
+  end
+
+  def get_journal_owner_posts_count(journal) do
+    owner_user_id = get_journal_owner_id(journal)
+
+    journal
+    |> Ecto.assoc(:posts)
+    |> Post.with_user_id(owner_user_id)
+    |> Repo.aggregate(:count, :id)
+  end
+
+  def get_journal_replies_count(journal) do
+    owner_user_id = get_journal_owner_id(journal)
+
+    journal
+    |> Ecto.assoc(:posts)
+    |> Post.without_user_id(owner_user_id)
+    |> Repo.aggregate(:count, :id)
+  end
+
   @doc """
   Creates a journal for a user.
   """

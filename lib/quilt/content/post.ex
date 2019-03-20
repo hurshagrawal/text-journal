@@ -1,6 +1,7 @@
 defmodule Quilt.Content.Post do
   use Ecto.Schema
   import Ecto.Changeset
+  import Ecto.Query
 
   schema "posts" do
     field :content, :string
@@ -16,5 +17,13 @@ defmodule Quilt.Content.Post do
     post
     |> cast(attrs, [:content, :journal_id, :user_id])
     |> validate_required([:content, :journal_id, :user_id])
+  end
+
+  def with_user_id(query, included_id) do
+    from p in query, where: p.user_id == ^included_id
+  end
+
+  def without_user_id(query, excluded_id) do
+    from p in query, where: p.user_id != ^excluded_id
   end
 end
