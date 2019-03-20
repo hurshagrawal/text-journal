@@ -1,0 +1,14 @@
+<%= if @journal do %>
+  <%= @journal.name %>
+<% else %>
+  <h1>Create a journal</h1>
+
+  <%= form_for @conn, Routes.journal_path(@conn, :create), fn f -> %>
+    <%= label f, :name %>
+    <%= text_input f, :name %>
+
+    <div>
+      <%= submit "Create" %>
+    </div>
+  <% end %>
+<% end %>

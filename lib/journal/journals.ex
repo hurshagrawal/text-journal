@@ -1,6 +1,8 @@
 defmodule Journal.Journals do
   import Ecto.Query, warn: false
 
+  alias Ecto.Multi
+
   alias Journal.Repo
   alias Journal.Accounts
   alias Journal.Accounts.User
@@ -20,6 +22,12 @@ defmodule Journal.Journals do
   @doc """
   Creates a journal for a user.
   """
-  def create_user_journal(user, %{"name" => name}) do
+  def create_user_journal(user, attrs) do
+    Multi.new()
+    |> Multi.insert(:journal, Journal.changeset(%Journal{}, attrs))
+    |> Multi.insert(:journal_membership, fn %{journal: journal} ->
+      Ecto.build_assoc(journal, :journal_memberships, user: user, type: "owner")
+    end)
+    |> Repo.transaction()
   end
 end

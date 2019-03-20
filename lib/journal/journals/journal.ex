@@ -25,7 +25,17 @@ defmodule Journal.Journals.Journal do
   @doc false
   def changeset(journal, attrs) do
     journal
-    |> cast(attrs, [:type])
-    |> validate_required([:type])
+    |> cast(attrs, [:type, :name, :phone_number, :onboarding_text])
+    |> set_default_type()
+    |> validate_required([:type, :name])
+  end
+
+  def set_default_type(%Ecto.Changeset{} = changeset) do
+    default_type = "broadcast"
+
+    case fetch_change(changeset, :type) do
+      :error -> put_change(changeset, :type, default_type)
+      _ -> changeset
+    end
   end
 end

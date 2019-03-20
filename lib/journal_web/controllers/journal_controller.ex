@@ -14,13 +14,14 @@ defmodule JournalWeb.JournalController do
     render(conn, "index.html", journal: journal)
   end
 
-  def create(conn, %{"journal" => journal_params}, current_user) do
-    case Journals.create_user_journal(current_user, journal_params) do
-      {:ok, journal} ->
+  def create(conn, %{"name" => name}, current_user) do
+    case Journals.create_user_journal(current_user, %{name: name}) do
+      {:ok, %{journal: journal}} ->
+        # TODO: Get a new number from Twilio + update the journal
         conn
         |> redirect(to: Routes.journal_path(conn, :index))
 
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, _failed_operation, %Ecto.Changeset{} = changeset, _changes} ->
         error_messages = Enum.join(changeset_errors(changeset), ", ")
 
         conn

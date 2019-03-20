@@ -13,6 +13,10 @@ defmodule JournalWeb.Controllers.Helpers do
     Guardian.sign_in(conn, user)
   end
 
+  def sign_out(conn) do
+    Guardian.sign_out(conn)
+  end
+
   def ensure_authenticated(conn, _params) do
     if get_current_user(conn) == nil do
       redirect(conn, to: Routes.user_path(conn, :index))

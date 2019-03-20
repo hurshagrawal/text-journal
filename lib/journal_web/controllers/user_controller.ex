@@ -19,12 +19,13 @@ defmodule JournalWeb.UserController do
   @doc """
   Creates a user given a name and phone number.
   """
-  def create(
-        conn,
-        %{"name" => name, "phone_number" => phone_number},
-        _current_user
-      ) do
-    case Accounts.create_user(%{name: name, phone_number: phone_number}) do
+  def create(conn, params, _current_user) do
+    user_attrs = %{
+      name: params["name"],
+      phone_number: params["phone_number"]
+    }
+
+    case Accounts.create_user(user_attrs) do
       {:ok, user} ->
         {:ok, user} = Accounts.regenerate_verification_code(user)
         Sms.send_verification_code(user.phone_number, user.verification_code)
@@ -77,6 +78,15 @@ defmodule JournalWeb.UserController do
         )
         |> redirect(to: Routes.user_path(conn, :verify_index))
     end
+  end
+
+  @doc """
+  Signs a user out.
+  """
+  def sign_out(conn, _params, _current_user) do
+    conn
+    |> sign_out()
+    |> redirect(to: Routes.user_path(conn, :index))
   end
 
   @doc """
