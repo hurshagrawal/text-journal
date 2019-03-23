@@ -24,6 +24,13 @@ defmodule QuiltWeb.JournalController do
   end
 
   def create(conn, %{"name" => name}, current_user) do
+    journal_attrs = %{
+      name: name,
+      onboarding_text: Content.default_onboarding_text(),
+      unsubscribe_text: Content.default_unsubscribe_text(),
+      subscriber_response_text: Content.default_subscriber_response_text()
+    }
+
     case Content.create_user_journal(current_user, %{name: name}) do
       {:ok, %{journal: journal}} ->
         number = Sms.get_new_sms_number()

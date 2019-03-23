@@ -41,10 +41,26 @@
 
     <div class="journal--index--section">
       <label class="journal--index--section--title" for="onboarding_text">
-        <b>Onboarding Texts:</b> Sent to new subscribers!
+        <b>To new subscribers...</b>
       </label>
 
       <%= textarea f, :onboarding_text, class: "journal--index--section--box", value: @journal.onboarding_text %>
+    </div>
+
+    <div class="journal--index--section">
+      <label class="journal--index--section--title" for="subscriber_response_text">
+        <b>When a follower responds...</b>
+      </label>
+
+      <%= textarea f, :onboarding_text, class: "journal--index--section--box", value: @journal.subscriber_response_text %>
+    </div>
+
+    <div class="journal--index--section">
+      <label class="journal--index--section--title" for="unsubscribe_text">
+        <b>When a follower unsubscribes...</b>
+      </label>
+
+      <%= textarea f, :unsubscribe_text, class: "journal--index--section--box", value: @journal.unsubscribe_text %>
     </div>
 
     <%= submit "Save Changes" %>

@@ -17,7 +17,17 @@ defmodule Quilt.Content.JournalMembership do
   def changeset(journal_membership, attrs) do
     journal_membership
     |> cast(attrs, [:type, :journal_id, :user_id, :subscribed])
+    |> set_default_type()
     |> validate_required([:type, :journal_id, :user_id, :subscribed])
+  end
+
+  def set_default_type(%Ecto.Changeset{} = changeset) do
+    default_type = "subscriber"
+
+    case fetch_change(changeset, :type) do
+      :error -> put_change(changeset, :type, default_type)
+      _ -> changeset
+    end
   end
 
   def without_owner(query) do

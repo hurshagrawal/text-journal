@@ -135,4 +135,16 @@ defmodule Quilt.Content do
     |> Journal.changeset(attrs)
     |> Repo.update!()
   end
+
+  def default_onboarding_text do
+    "Hey! Thanks for following my walk. I'll text you from this number each day once my walk begins on April 1st.\n\nAnd feel free to reply to my messages as well - or reply \"stop\" if you've had enough.\n\nFinally, add this number to your contacts book for the bext experience."
+  end
+
+  def default_unsubscribe_text do
+    "Thanks for following along. I'll stop sending you messages now. Hope to see you again soon!"
+  end
+
+  def default_subscriber_response_text do
+    "Hi there! I've decided to unplug during my walk and turn off all notifications. I'll see this when my walk ends. Keep the replies coming in the meantime!"
+  end
 end
