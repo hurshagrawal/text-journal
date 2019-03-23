@@ -3,7 +3,8 @@ defmodule Quilt.Repo.Migrations.CreatePosts do
 
   def change do
     create table(:posts) do
-      add(:content, :text, null: false)
+      add(:body, :text)
+      add(:media_urls, {:array, :string}, default: [])
       add(:journal_id, references(:journals, on_delete: :nothing), null: false)
       add(:user_id, references(:users, on_delete: :nothing), null: false)
 

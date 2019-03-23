@@ -3,10 +3,10 @@ defmodule Quilt.Repo.Migrations.CreateUsers do
 
   def change do
     create table(:users) do
-      add(:name, :string, null: false)
-      add(:verification_code, :integer)
+      add(:name, :string)
       add(:phone_number, :string, null: false)
-      add(:phone_number_verified, :boolean, null: false, default: false)
+      add(:verification_code, :integer)
+      add(:verification_code_expires_at, :naive_datetime)
       add(:last_login_at, :naive_datetime)
 
       timestamps()

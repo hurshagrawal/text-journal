@@ -4,7 +4,8 @@ defmodule Quilt.Content.Post do
   import Ecto.Query
 
   schema "posts" do
-    field :content, :string
+    field :body, :string
+    field :media_urls, {:array, :string}
 
     belongs_to :journal, Quilt.Content.Journal
     belongs_to :user, Quilt.Accounts.User
@@ -15,8 +16,8 @@ defmodule Quilt.Content.Post do
   @doc false
   def changeset(post, attrs) do
     post
-    |> cast(attrs, [:content, :journal_id, :user_id])
-    |> validate_required([:content, :journal_id, :user_id])
+    |> cast(attrs, [:body, :journal_id, :user_id, :media_urls])
+    |> validate_required([:journal_id, :user_id, :media_urls])
   end
 
   def with_user_id(query, included_id) do

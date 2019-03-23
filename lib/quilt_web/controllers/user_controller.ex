@@ -2,9 +2,7 @@ defmodule QuiltWeb.UserController do
   use QuiltWeb, :controller
   use QuiltWeb.GuardedController
 
-  alias Quilt.Accounts
-  alias Quilt.Sms
-  alias Quilt.Accounts.User
+  alias Quilt.{Accounts, Sms}
 
   plug :ensure_unauthenticated when action in [:index, :verify_index]
 
@@ -12,7 +10,7 @@ defmodule QuiltWeb.UserController do
   Site homepage. Loads the signup/login page if signed out, or
   redirects to the main journal page if signed in.
   """
-  def index(conn, _params, current_user) do
+  def index(conn, _params, _current_user) do
     render(conn, "logged_out_index.html")
   end
 

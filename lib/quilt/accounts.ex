@@ -9,17 +9,15 @@ defmodule Quilt.Accounts do
   """
   def get_user(id), do: Repo.get(User, id)
 
+  def get_or_create_user(attrs) do
+    case Repo.get_by(User, attrs) do
+      nil -> create_user(attrs)
+      user -> user
+    end
+  end
+
   @doc """
   Creates a user.
-
-  ## Examples
-
-      iex> create_user(%{field: value})
-      {:ok, %User{}}
-
-      iex> create_user(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
   """
   def create_user(attrs \\ %{}) do
     %User{}

@@ -18,6 +18,10 @@ defmodule QuiltWeb.Router do
     plug(Guardian.Plug.LoadResource, allow_blank: true)
   end
 
+  pipeline :webhook do
+    plug :accepts, ["html"]
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -35,6 +39,10 @@ defmodule QuiltWeb.Router do
     get "/journal", JournalController, :index
     post "/journal", JournalController, :create
     put "/journal/:id", JournalController, :update
+  end
+
+  scope "/", QuiltWeb do
+    post "/webhook", WebhookController, :run
   end
 
   # Other scopes may use custom stacks.

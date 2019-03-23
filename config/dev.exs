@@ -73,3 +73,7 @@ config :quilt, Quilt.Repo,
   database: "quilt_dev",
   hostname: "localhost",
   pool_size: 10
+
+# Finally import the config/dev.secret.exs which should be versioned
+# separately.
+import_config "dev.secret.exs"

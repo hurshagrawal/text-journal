@@ -5,6 +5,7 @@ defmodule Quilt.Content.JournalMembership do
 
   schema "journal_memberships" do
     field :type, :string
+    field :subscribed, :boolean
 
     belongs_to :journal, Quilt.Content.Journal
     belongs_to :user, Quilt.Accounts.User
@@ -15,11 +16,15 @@ defmodule Quilt.Content.JournalMembership do
   @doc false
   def changeset(journal_membership, attrs) do
     journal_membership
-    |> cast(attrs, [:type, :journal_id, :user_id])
-    |> validate_required([:type, :journal_id, :user_id])
+    |> cast(attrs, [:type, :journal_id, :user_id, :subscribed])
+    |> validate_required([:type, :journal_id, :user_id, :subscribed])
   end
 
   def without_owner(query) do
     from jm in query, where: jm.type != "owner"
+  end
+
+  def subscribed(query) do
+    from jm in query, where: jm.subscribed == true
   end
 end

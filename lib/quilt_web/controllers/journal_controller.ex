@@ -2,10 +2,7 @@ defmodule QuiltWeb.JournalController do
   use QuiltWeb, :controller
   use QuiltWeb.GuardedController
 
-  alias Quilt.Accounts
-  alias Quilt.Accounts.User
-  alias Quilt.Content
-  alias Quilt.Content.Journal
+  alias Quilt.{Content, Sms}
 
   plug :ensure_authenticated
 
@@ -29,7 +26,9 @@ defmodule QuiltWeb.JournalController do
   def create(conn, %{"name" => name}, current_user) do
     case Content.create_user_journal(current_user, %{name: name}) do
       {:ok, %{journal: journal}} ->
-        # TODO: Get a new number from Twilio + update the journal
+        number = Sms.get_new_sms_number()
+        Content.update_journal(journal, phone_number: number)
+
         conn
         |> redirect(to: Routes.journal_path(conn, :index))
 
@@ -42,11 +41,18 @@ defmodule QuiltWeb.JournalController do
     end
   end
 
-  def update(
-        conn,
-        %{"name" => name, "onboarding_text" => onboarding_text},
-        current_user
-      ) do
+  def update(conn, params, current_user) do
+    attrs = %{
+      name: params["name"],
+      onboarding_text: params["onboarding_text"],
+      subscriber_response_text: params["subscriber_response_text"],
+      unsubscribe_text: params["unsubscribe_text"]
+    }
+
+    current_user
+    |> Content.get_user_journal()
+    |> Content.update_journal(attrs)
+
     conn
   end
 end

@@ -7,6 +7,8 @@ defmodule Quilt.Content.Journal do
     field :phone_number, :string
     field :name, :string
     field :onboarding_text, :string
+    field :unsubscribe_text, :string
+    field :subscriber_response_text, :string
 
     has_many :journal_memberships, Quilt.Content.JournalMembership
     has_many :users, through: [:journal_memberships, :user]

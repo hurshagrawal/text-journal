@@ -39,13 +39,15 @@ defmodule Quilt.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:phoenix_html, "~> 2.11"},
-      {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:guardian, "~> 1.2"},
-      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false},
-      {:ex_phone_number, "~> 0.2.0"}
+      {:ex_phone_number, "~> 0.2.0"},
+      {:httpoison, "~> 1.5"},
+      {:poison, "~> 3.0"},
+      {:phoenix_live_reload, "~> 1.2", only: :dev},
+      {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
     ]
   end
 

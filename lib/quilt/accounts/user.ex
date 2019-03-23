@@ -3,11 +3,11 @@ defmodule Quilt.Accounts.User do
   import Ecto.Changeset
 
   schema "users" do
-    field :last_login_at, :naive_datetime
     field :name, :string
     field :phone_number, :string
-    field :phone_number_verified, :boolean
     field :verification_code, :integer
+    field :verification_code_expires_at, :naive_datetime
+    field :last_login_at, :naive_datetime
 
     has_many :journal_memberships, Quilt.Content.JournalMembership
     has_many :journals, through: [:journal_memberships, :journal]
@@ -26,13 +26,13 @@ defmodule Quilt.Accounts.User do
     |> cast(attrs, [
       :name,
       :verification_code,
+      :verification_code_expires_at,
       :phone_number,
-      :phone_number_verified,
       :last_login_at
     ])
     |> sanitize_name()
     |> sanitize_phone_number()
-    |> validate_required([:name, :phone_number])
+    |> validate_required([:phone_number])
   end
 
   def sanitize_name(%Ecto.Changeset{} = changeset) do
