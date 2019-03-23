@@ -12,7 +12,7 @@ defmodule QuiltWeb.WebhookController do
       "Body" => body,
       "From" => from_number,
       "To" => to_number,
-      "NumMedia" => media_count
+      "NumMedia" => media_count_str
     } = params
 
     case Content.get_journal(phone_number: to_number) do
@@ -24,13 +24,26 @@ defmodule QuiltWeb.WebhookController do
         )
 
       journal ->
+        {media_count, ""} = Integer.parse(media_count_str)
+
         media_urls =
-          0..(media_count - 1)
-          |> Enum.to_list()
-          |> Enum.map(&Map.fetch(params, "MediaUrl#{&1}"))
+          if media_count > 0 do
+            0..(media_count - 1)
+            |> Enum.to_list()
+            |> Enum.map(fn i ->
+              {:ok, url} = Map.fetch(params, "MediaUrl#{i}")
+              url
+            end)
+          else
+            []
+          end
 
         user = Accounts.get_or_create_user(phone_number: from_number)
-        {:ok, _} = Content.create_post(journal, user, body, media_urls)
+        is_stop_post = body |> String.trim() |> String.downcase() == "stop"
+
+        unless is_stop_post do
+          {:ok, _} = Content.create_post(journal, user, body, media_urls)
+        end
 
         case Content.get_membership(journal_id: journal.id, user_id: user.id) do
           # If membership doesn't exist, create it and send welcome SMS.
@@ -61,25 +74,17 @@ defmodule QuiltWeb.WebhookController do
                     )
 
                   true ->
-                    case body |> String.trim() |> String.downcase() do
+                    if is_stop_post do
                       # If this subscriber messaged "stop", unsubscribe them
-                      "stop" ->
-                        Content.unsubscribe_membership(membership)
-
-                        Quilt.Sms.send_sms(
-                          journal.unsubscribe_text,
-                          from_number,
-                          to_number
-                        )
-
+                      Content.unsubscribe_membership(membership)
+                    else
                       # If this message is from a subscribed subscriber, send a
                       # text acknowledging receipt of the message
-                      _ ->
-                        Quilt.Sms.send_sms(
-                          journal.subscriber_response_text,
-                          from_number,
-                          to_number
-                        )
+                      Quilt.Sms.send_sms(
+                        journal.subscriber_response_text,
+                        from_number,
+                        to_number
+                      )
                     end
                 end
             end

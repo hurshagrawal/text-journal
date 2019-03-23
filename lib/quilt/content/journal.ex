@@ -7,7 +7,6 @@ defmodule Quilt.Content.Journal do
     field :phone_number, :string
     field :name, :string
     field :onboarding_text, :string
-    field :unsubscribe_text, :string
     field :subscriber_response_text, :string
 
     has_many :journal_memberships, Quilt.Content.JournalMembership
@@ -27,7 +26,13 @@ defmodule Quilt.Content.Journal do
   @doc false
   def changeset(journal, attrs) do
     journal
-    |> cast(attrs, [:type, :name, :phone_number, :onboarding_text])
+    |> cast(attrs, [
+      :type,
+      :name,
+      :phone_number,
+      :onboarding_text,
+      :subscriber_response_text
+    ])
     |> set_default_type()
     |> validate_required([:type, :name])
   end

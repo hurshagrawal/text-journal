@@ -6,6 +6,7 @@
     <div class="journal--index--section">
       <div class="journal--index--section--title">
         <b>Your Number:</b> Text this number to post!
+
       </div>
       <div class="journal--index--section--box">
         <%= @journal.phone_number %>
@@ -53,14 +54,6 @@
       </label>
 
       <%= textarea f, :onboarding_text, class: "journal--index--section--box", value: @journal.subscriber_response_text %>
-    </div>
-
-    <div class="journal--index--section">
-      <label class="journal--index--section--title" for="unsubscribe_text">
-        <b>When a follower unsubscribes...</b>
-      </label>
-
-      <%= textarea f, :unsubscribe_text, class: "journal--index--section--box", value: @journal.unsubscribe_text %>
     </div>
 
     <%= submit "Save Changes" %>

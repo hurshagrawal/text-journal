@@ -7,7 +7,6 @@ defmodule Quilt.Repo.Migrations.CreateJournals do
       add(:name, :string, null: false)
       add(:phone_number, :string)
       add(:onboarding_text, :text)
-      add(:unsubscribe_text, :text)
       add(:subscriber_response_text, :text)
 
       timestamps()

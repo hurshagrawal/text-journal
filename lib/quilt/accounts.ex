@@ -10,9 +10,20 @@ defmodule Quilt.Accounts do
   def get_user(id), do: Repo.get(User, id)
 
   def get_or_create_user(attrs) do
-    case Repo.get_by(User, attrs) do
-      nil -> create_user(attrs)
-      user -> user
+    query =
+      from u in User,
+        where: ^attrs,
+        order_by: [desc: u.id],
+        limit: 1
+
+    case Repo.one(query) do
+      nil ->
+        attrs
+        |> Enum.into(%{})
+        |> create_user()
+
+      user ->
+        user
     end
   end
 

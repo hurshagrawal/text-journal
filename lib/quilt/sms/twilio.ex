@@ -51,9 +51,9 @@ defmodule Quilt.Sms.Twilio do
       })
 
     url_params =
-      Enum.map(media_urls, fn url ->
-        "&MediaUrl[]=" <> url
-      end)
+      media_urls
+      |> Enum.map(&("&MediaUrl=" <> URI.encode(&1)))
+      |> Enum.join("")
 
     send_message(number_params <> url_params)
   end

@@ -19,7 +19,7 @@ defmodule QuiltWeb.JournalController do
         replies_count: replies_count
       )
     else
-      render(conn, "index.html")
+      render(conn, "index.html", journal: nil)
     end
   end
 
@@ -27,14 +27,13 @@ defmodule QuiltWeb.JournalController do
     journal_attrs = %{
       name: name,
       onboarding_text: Content.default_onboarding_text(),
-      unsubscribe_text: Content.default_unsubscribe_text(),
       subscriber_response_text: Content.default_subscriber_response_text()
     }
 
-    case Content.create_user_journal(current_user, %{name: name}) do
+    case Content.create_user_journal(current_user, journal_attrs) do
       {:ok, %{journal: journal}} ->
         number = Sms.get_new_sms_number()
-        Content.update_journal(journal, phone_number: number)
+        Content.update_journal(journal, %{phone_number: number})
 
         conn
         |> redirect(to: Routes.journal_path(conn, :index))
@@ -52,8 +51,7 @@ defmodule QuiltWeb.JournalController do
     attrs = %{
       name: params["name"],
       onboarding_text: params["onboarding_text"],
-      subscriber_response_text: params["subscriber_response_text"],
-      unsubscribe_text: params["unsubscribe_text"]
+      subscriber_response_text: params["subscriber_response_text"]
     }
 
     current_user
