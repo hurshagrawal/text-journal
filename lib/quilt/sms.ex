@@ -19,20 +19,18 @@ defmodule Quilt.Sms do
   Provisions a new US phone number. WARNING: This method call costs $1.
   """
   def get_new_sms_number() do
-    # {:ok, phone_number} =
-    # Twilio.get_available_phone_numbers()
-    # |> List.first()
-    # |> Map.fetch("phone_number")
+    {:ok, phone_number} =
+      Twilio.get_available_phone_numbers()
+      |> List.first()
+      |> Map.fetch("phone_number")
 
-    # {:ok, phone_number} = Twilio.provision_phone_number(phone_number)
+    {:ok, phone_number} = Twilio.provision_phone_number(phone_number)
 
-    # phone_number
-
-    "+12407433481"
+    phone_number
   end
 
   def get_default_sms_number() do
-    "+12407433481"
+    System.get_env("DEFAULT_PHONE_NUMBER") || "+12407433481"
   end
 
   def fan_out_sms(body, media_urls \\ [], to_numbers, from_number) do
