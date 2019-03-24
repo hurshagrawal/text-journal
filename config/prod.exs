@@ -75,6 +75,6 @@ config :quilt, Quilt.Repo,
 # See the releases documentation accordingly.
 
 config :quilt,
-  twilio_account_sid: {:system, "TWILIO_ACCOUNT_ID"},
-  twilio_auth_token: {:system, "TWILIO_AUTH_TOKEN"},
-  twilio_twiml_sid: {:system, "TWILIO_TWIML_SID"}
+  twilio_account_sid: System.get_env("TWILIO_ACCOUNT_ID"),
+  twilio_auth_token: System.get_env("TWILIO_AUTH_TOKEN"),
+  twilio_twiml_sid: System.get_env("TWILIO_TWIML_SID")
