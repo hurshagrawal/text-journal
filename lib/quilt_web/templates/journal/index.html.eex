@@ -53,7 +53,7 @@
         <b>When a follower responds...</b>
       </label>
 
-      <%= textarea f, :onboarding_text, class: "journal--index--section--box", value: @journal.subscriber_response_text %>
+      <%= textarea f, :subscriber_response_text, class: "journal--index--section--box", value: @journal.subscriber_response_text %>
     </div>
 
     <%= submit "Save Changes" %>
