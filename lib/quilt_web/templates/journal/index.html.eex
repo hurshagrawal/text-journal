@@ -1,75 +1,17 @@
-<%= if @journal do %>
-
-  Your Journal
-  <hr>
-  <%= form_for @conn, Routes.journal_path(@conn, :update, @journal.id), [method: :put], fn f -> %>
-    <div class="journal--index--section">
-      <div class="journal--index--section--title">
-        <b>Your Number:</b> Text this number to post!
-
-      </div>
-      <div class="journal--index--section--box">
-        <%= @journal.phone_number %>
-      </div>
+<div class="container">
+  <header>
+    <div class="header-title">Journal Settings</div>
+    <a href="/signout">
+      <div class-"button-logout">Sign out</div>
+    </a>
+  </header>
+  <div class="content">
+    <div class=content-card">
+      <%= if @journal do %>
+        <%= render "_edit_journal.html", assigns %>
+      <% else %>
+        <%= render "_create_journal.html", assigns %>
+      <% end %>
     </div>
-
-    <div class="journal--index--section">
-      <div class="journal--index--section--title">
-        <b>Your Stats</b>
-      </div>
-      <div class="journal--index--section--box">
-        <div class="journal--index--section--box--column">
-          <div><%= @subscriber_count %></div>
-          <div>Subscribers</div>
-        </div>
-        <div class="journal--index--section--box--column">
-          <div><%= @posts_count %></div>
-          <div>Posts</div>
-        </div>
-        <div class="journal--index--section--box--column">
-          <div><%= @replies_count %></div>
-          <div>Replies</div>
-        </div>
-      </div>
-    </div>
-
-    <div class="journal--index--section">
-      <div class="journal--index--section--title">
-        <b>Journal Name</b>
-      </div>
-      <%= text_input f, :name, class: "journal--index--section--box", value: @journal.name %>
-    </div>
-
-    <div class="journal--index--section">
-      <label class="journal--index--section--title" for="onboarding_text">
-        <b>To new subscribers...</b>
-      </label>
-
-      <%= textarea f, :onboarding_text, class: "journal--index--section--box", value: @journal.onboarding_text %>
-    </div>
-
-    <div class="journal--index--section">
-      <label class="journal--index--section--title" for="subscriber_response_text">
-        <b>When a follower responds...</b>
-      </label>
-
-      <%= textarea f, :subscriber_response_text, class: "journal--index--section--box", value: @journal.subscriber_response_text %>
-    </div>
-
-    <%= submit "Save Changes" %>
-  <% end %>
-
-<% else %>
-
-  <h1>Create a journal</h1>
-
-  <%= form_for @conn, Routes.journal_path(@conn, :create), fn f -> %>
-    <%= label f, :name %>
-    <%= text_input f, :name %>
-
-    <div>
-      <%= submit "Create" %>
-    </div>
-  <% end %>
-
-<% end %>
+  </div>
+</div>

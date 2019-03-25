@@ -1,13 +1,40 @@
-<h1>Welcome!</h1>
+<div class="container">
+  <header>
+    <div class="header-title">Quilt</div>
+  </header>
+  <div class="content">
+    <div class=content-card">
+      <div class="content-card-section">
+        <div class="content-card-section-title">
+          Sign up
+        </div>
+        <%= form_for @conn, Routes.user_path(@conn, :create), fn f -> %>
+          <%= label f, :name %>
+          <%= text_input f, :name %>
 
-<%= form_for @conn, Routes.user_path(@conn, :create), fn f -> %>
-  <%= label f, :name %>
-  <%= text_input f, :name %>
+          <%= label f, :phone_number %>
+          <%= number_input f, :phone_number %>
 
-  <%= label f, :phone_number %>
-  <%= number_input f, :phone_number %>
+          <div>
+            <%= submit "Sign up" %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div class=content-card">
+      <div class="content-card-section">
+        <div class="content-card-section-title">
+          Sign in
+        </div>
+          <%= form_for @conn, Routes.user_path(@conn, :sign_in), fn f -> %>
+            <%= label f, :phone_number %>
+            <%= number_input f, :phone_number %>
 
-  <div>
-    <%= submit "Sign up" %>
+            <div>
+              <%= submit "Sign in" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
   </div>
-<% end %>
+</div>
