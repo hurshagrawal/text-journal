@@ -46,7 +46,7 @@ defmodule QuiltWeb.UserController do
   """
   def verify_index(conn, _params, _current_user) do
     with user_id when user_id != nil <- get_session(conn, :user_to_verify_id),
-         user when user != nil <- Accounts.get_user(user_id) do
+         user when user != nil <- Accounts.get_user(id: user_id) do
       render(conn, "verify.html")
     else
       _ ->
@@ -61,7 +61,7 @@ defmodule QuiltWeb.UserController do
   """
   def verify_user(conn, %{"code" => code}, _current_user) do
     with user_id when user_id != nil <- get_session(conn, :user_to_verify_id),
-         user when user != nil <- Accounts.get_user(user_id),
+         user when user != nil <- Accounts.get_user(id: user_id),
          {parsed_code, _} <- Integer.parse(String.trim(code)),
          true <- user.verification_code == parsed_code do
       conn
@@ -78,9 +78,31 @@ defmodule QuiltWeb.UserController do
     end
   end
 
-  @doc """
-  Signs a user out.
-  """
+  def sign_in(conn, %{"phone_number" => phone_number}, _current_user) do
+    if Accounts.phone_number_valid?(phone_number) do
+      sanitized_phone = Accounts.normalize_phone_number(phone_number)
+
+      case Accounts.get_user(phone_number: sanitized_phone) do
+        user ->
+          {:ok, user} = Accounts.regenerate_verification_code(user)
+          Sms.send_verification_code(user.phone_number, user.verification_code)
+
+          conn
+          |> put_session(:user_to_verify_id, user.id)
+          |> redirect(to: Routes.user_path(conn, :verify_index))
+
+        nil ->
+          conn
+          |> put_flash(:error, "Oops! No user was found with that number.")
+          |> redirect(to: Routes.user_path(conn, :index))
+      end
+    else
+      conn
+      |> put_flash(:error, "Oops! That number isn't valid.")
+      |> redirect(to: Routes.user_path(conn, :index))
+    end
+  end
+
   def sign_out(conn, _params, _current_user) do
     conn
     |> sign_out()

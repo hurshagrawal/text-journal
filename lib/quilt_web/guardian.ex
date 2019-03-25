@@ -18,7 +18,7 @@ defmodule QuiltWeb.Guardian do
     # the resource id so here we'll rely on that to look it up.
     user_id = claims["sub"]
 
-    case Accounts.get_user(user_id) do
+    case Accounts.get_user(id: user_id) do
       nil -> {:error, :not_found}
       user -> {:ok, user}
     end

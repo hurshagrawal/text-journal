@@ -4,10 +4,20 @@ defmodule Quilt.Accounts do
 
   alias Quilt.Accounts.User
 
+  defdelegate phone_number_valid?(raw_phone_string), to: User
+  defdelegate normalize_phone_number(raw_phone_string), to: User
+
   @doc """
   Gets a single user.
   """
-  def get_user(id), do: Repo.get(User, id)
+  def get_user(attrs) do
+    Repo.one(
+      from u in User,
+        where: ^attrs,
+        order_by: [desc: u.id],
+        limit: 1
+    )
+  end
 
   def get_or_create_user(attrs) do
     query =

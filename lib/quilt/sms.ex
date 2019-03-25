@@ -19,14 +19,19 @@ defmodule Quilt.Sms do
   Provisions a new US phone number. WARNING: This method call costs $1.
   """
   def get_new_sms_number() do
-    {:ok, phone_number} =
-      Twilio.get_available_phone_numbers()
-      |> List.first()
-      |> Map.fetch("phone_number")
+    # TODO: Convert this to a feature flag or ENV var. This is hacky AF.
+    if Mix.env() == :prod do
+      {:ok, phone_number} =
+        Twilio.get_available_phone_numbers()
+        |> List.first()
+        |> Map.fetch("phone_number")
 
-    {:ok, phone_number} = Twilio.provision_phone_number(phone_number)
+      {:ok, phone_number} = Twilio.provision_phone_number(phone_number)
 
-    phone_number
+      phone_number
+    else
+      get_default_sms_number()
+    end
   end
 
   def get_default_sms_number() do

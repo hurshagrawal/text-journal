@@ -35,26 +35,36 @@ defmodule Quilt.Accounts.User do
     |> validate_required([:phone_number])
   end
 
-  def sanitize_name(%Ecto.Changeset{} = changeset) do
+  def phone_number_valid?(raw_phone_string) do
+    with {:ok, phone_number} <- ExPhoneNumber.parse(raw_phone_string, "US"),
+         true <- ExPhoneNumber.is_valid_number?(phone_number) do
+      true
+    else
+      _ -> false
+    end
+  end
+
+  def normalize_phone_number(raw_phone_string) do
+    {:ok, phone_number} = ExPhoneNumber.parse(raw_phone_string, "US")
+    ExPhoneNumber.format(phone_number, :e164)
+  end
+
+  defp sanitize_name(%Ecto.Changeset{} = changeset) do
     update_change(changeset, :name, &String.trim/1)
   end
 
-  def sanitize_phone_number(%Ecto.Changeset{} = changeset) do
+  defp sanitize_phone_number(%Ecto.Changeset{} = changeset) do
     new_phone_number = get_change(changeset, :phone_number)
 
-    if new_phone_number == nil do
-      changeset
-    else
-      with {:ok, phone_number} <- ExPhoneNumber.parse(new_phone_number, "US"),
-           true <- ExPhoneNumber.is_valid_number?(phone_number) do
-        update_change(changeset, :phone_number, fn new_phone_number ->
-          {:ok, phone_number} = ExPhoneNumber.parse(new_phone_number, "US")
-          ExPhoneNumber.format(phone_number, :e164)
-        end)
-      else
-        _ ->
-          add_error(changeset, :phone_number, "is invalid")
-      end
+    cond do
+      new_phone_number == nil ->
+        changeset
+
+      phone_number_valid?(new_phone_number) ->
+        update_change(changeset, :phone_number, &normalize_phone_number/1)
+
+      true ->
+        add_error(changeset, :phone_number, "is invalid")
     end
   end
 end

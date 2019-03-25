@@ -30,9 +30,9 @@ defmodule QuiltWeb.Router do
     pipe_through :browser
 
     get "/", UserController, :index
+    post "/signin", UserController, :sign_in
     get "/signout", UserController, :sign_out
     post "/users", UserController, :create
-    post "/users/login", UserController, :login
     get "/users/verify", UserController, :verify_index
     post "/users/verify", UserController, :verify_user
 
