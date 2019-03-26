@@ -33,6 +33,7 @@ defmodule Quilt.Accounts.User do
     |> sanitize_name()
     |> sanitize_phone_number()
     |> validate_required([:phone_number])
+    |> unique_constraint(:phone_number)
   end
 
   def phone_number_valid?(raw_phone_string) do
