@@ -1,57 +1,73 @@
 <%= form_for @conn, Routes.journal_path(@conn, :update, @journal.id), [method: :put], fn f -> %>
-  <div class="journal--index--section">
-    <div class="journal--index--section--title">
-      <b>Your Number:</b> Text this number to post!
+  <div class="card--section">
+    <div class="card--section--title">
+      Your Journal Information
+    </div>
 
-    </div>
-    <div class="journal--index--section--box">
-      <%= @journal.phone_number %>
-    </div>
-  </div>
-
-  <div class="journal--index--section">
-    <div class="journal--index--section--title">
-      <b>Your Stats</b>
-    </div>
-    <div class="journal--index--section--box">
-      <div class="journal--index--section--box--column">
-        <div><%= @subscriber_count %></div>
-        <div>Subscribers</div>
+    <div class="card--section--item">
+      <div class="card--section--item-label">
+        <b>Name</b>
       </div>
-      <div class="journal--index--section--box--column">
-        <div><%= @posts_count %></div>
-        <div>Posts</div>
-      </div>
-      <div class="journal--index--section--box--column">
-        <div><%= @replies_count %></div>
-        <div>Replies</div>
+      <div class="card--section--item-box">
+        <%= text_input f, :name, value: @journal.name %>
       </div>
     </div>
-  </div>
 
-  <div class="journal--index--section">
-    <div class="journal--index--section--title">
-      <b>Journal Name</b>
+    <div class="card--section--item">
+      <div class="card--section--item-label">
+        <b>Number:</b> Text your updates to this number!
+      </div>
+      <div class="card--section--item-box uneditable">
+        <%= @journal.phone_number %>
+      </div>
     </div>
-    <%= text_input f, :name, class: "journal--index--section--box", value: @journal.name %>
+
+    <div class="card--section--item">
+      <div class="card--section--item-label">
+        <b>Stats</b>
+      </div>
+      <div class="card--section--item-box uneditable">
+        <div class="card--section--item-box--column">
+          <div><b><%= @subscriber_count %></b></div>
+          <div>Subscribers</div>
+        </div>
+        <div class="card--section--item-box--column">
+          <div><b><%= @posts_count %></b></div>
+          <div>Posts</div>
+        </div>
+        <div class="card--section--item-box--column">
+          <div><b><%= @replies_count %></b></div>
+          <div>Replies</div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <div class="journal--index--section">
-    <label class="journal--index--section--title" for="onboarding_text">
-      <b>To new subscribers...</b>
-    </label>
+  <div class="card--section">
+    <div class="card--section--title">
+      Customize Your Messages
+    </div>
 
-    <%= textarea f, :onboarding_text, class: "journal--index--section--box", value: @journal.onboarding_text %>
+    <div class="card--section--item">
+      <div class="card--section--item-label">
+        <b>To New Subscribers...</b>
+      </div>
+      <div class="card--section--item-box">
+        <%= textarea f, :onboarding_text, value: @journal.onboarding_text %>
+      </div>
+    </div>
+
+    <div class="card--section--item">
+      <div class="card--section--item-label">
+        <b>When a Follower Responds...</b>
+      </div>
+
+      <div class="card--section--item-box">
+        <%= textarea f, :subscriber_response_text, value: @journal.subscriber_response_text %>
+      </div>
+    </div>
   </div>
 
-  <div class="journal--index--section">
-    <label class="journal--index--section--title" for="subscriber_response_text">
-      <b>When a follower responds...</b>
-    </label>
-
-    <%= textarea f, :subscriber_response_text, class: "journal--index--section--box", value: @journal.subscriber_response_text %>
-  </div>
-
-  <%= submit "Save Changes" %>
+  <%= submit "Save Changes", class: "card--button" %>
 <% end %>
 

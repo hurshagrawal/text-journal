@@ -1,16 +1,19 @@
-<div class="content">
-  <div class=content-card">
-    <div class="content-card-section">
-      <div class="content-card-section-title">Please type in your verification code.</div>
+<div class="content-card">
+  <%= form_for @conn, Routes.user_path(@conn, :verify_user), fn f -> %>
+    <div class="card--section">
+      <div class="card--section--title">
+        Please type in your verification code
+      </div>
 
-      <%= form_for @conn, Routes.user_path(@conn, :verify_user), fn f -> %>
-        <%= label f, :code %>
-        <%= number_input f, :code %>
-
-        <div>
-          <%= submit "Log in" %>
+      <div class="card--section--item">
+        <div class="card--section--item-label">
+          <b>Code</b>
         </div>
-      <% end %>
-    </div>
-  </div>
+        <div class="card--section--item-box">
+          <%= text_input f, :code %>
+        </div>
+      </div>
+
+      <%= submit "Sign in", class: "card--button" %>
+  <% end %>
 </div>

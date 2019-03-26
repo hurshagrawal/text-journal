@@ -1,17 +1,7 @@
-<div class="container">
-  <header>
-    <div class="header-title">Journal Settings</div>
-    <a href="/signout">
-      <div class-"button-logout">Sign out</div>
-    </a>
-  </header>
-  <div class="content">
-    <div class=content-card">
-      <%= if @journal do %>
-        <%= render "_edit_journal.html", assigns %>
-      <% else %>
-        <%= render "_create_journal.html", assigns %>
-      <% end %>
-    </div>
-  </div>
+<div class="content-card">
+  <%= if @journal do %>
+    <%= render "_edit_journal.html", assigns %>
+  <% else %>
+    <%= render "_create_journal.html", assigns %>
+  <% end %>
 </div>

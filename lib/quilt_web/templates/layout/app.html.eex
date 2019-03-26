@@ -8,12 +8,19 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
   <body>
-    <main role="main" class="container">
-      <header>
-        <div class="header-title"> <%= assigns[:title] || "Quilt" %></div>
-      </header>
-      <div class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></div>
-      <div class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></div>
+    <header>
+      <div class="header-title"> <%= assigns[:title] || "Quilt" %></div>
+      <%= if assigns[:current_user] do %>
+        <a href="/signout" class="button-signout">Sign out</a>
+      <% end %>
+    </header>
+    <main role="main">
+      <%= if get_flash(@conn, :info) do %>
+        <div class="alert content-card alert-info" role="alert"><%= get_flash(@conn, :info) %></div>
+      <% end %>
+      <%= if get_flash(@conn, :error) do %>
+        <div class="alert content-card alert-danger" role="alert"><%= get_flash(@conn, :error) %></div>
+      <% end %>
       <%= render @view_module, @view_template, assigns %>
     </main>
     <script type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>

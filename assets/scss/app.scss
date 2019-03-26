@@ -1,11 +1,11 @@
 /* This file is for your main application css. */
 
-@import url('https://fonts.googleapis.com/css?family=Lato');
-
+@import url('https://fonts.googleapis.com/css?family=Lato:400,900');
 
 body {
   font-family: 'Lato', sans-serif;
   background-color: #fafafa;
+  margin: 0;
 }
 
 .alert.alert-info {
@@ -14,11 +14,139 @@ body {
 .alert.alert-info {
 }
 
-.container {
+header {
+  height: 50px;
+  width: 100%;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: #fff;
+  border-bottom: solid 1px #dfe5e7;
+
+  .header-title {
+    font-size: 14px;
+  }
+
+  .button-signout {
+    text-decoration: none;
+    color: #000;
+    font-size: 14px;
+    position: absolute;
+    right: 20px;
+  }
+}
+
+main {
+  padding: 30px;
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-  .header-title {
+.content-card {
+  width: 450px;
+
+  box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.02);
+  border-radius: 7px;
+  border: solid 1px #e9e9e9;
+
+  background-color: #ffffff;
+
+  padding: 40px;
+  margin-bottom: 40px;
+
+  &.alert {
+    padding: 10px;
+    margin-bottom: 15px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
+}
+
+.card--section {
+  margin-bottom: 50px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+  .card--section--title {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+
+  .card--section--item {
+    margin-top: 20px;
+  }
+
+    .card--section--item-label {
+      font-size: 12px;
+      margin-bottom: 5px;
+    }
+
+    .card--section--item-box {
+      display: flex;
+      flex-direction: row;
+
+      border-radius: 3px;
+      border: solid 1px #e3e3e3;
+
+      color: #3b3b3b;
+      font-size: 12px;
+
+      input, textarea {
+        padding: 10px;
+        width: 100%;
+        border: none;
+
+        &:focus {
+          outline: none;
+        }
+      }
+
+      textarea {
+        min-height: 80px;
+      }
+
+      &.uneditable {
+        padding: 10px;
+        background-color: #fffbf5;
+      }
+    }
+
+      .card--section--item-box--column {
+        height: 56px;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        flex: 1;
+
+        color: #000;
+        opacity: 0.6;
+
+        border-right: 1px solid #000;
+        &:last-child {
+          border-right: none;
+        }
+      }
+
+.card--button {
+  cursor: pointer;
+  border: none;
+  background-color: #d45f06;
+  border-radius: 3px;
+  width: 100%;
+  height: 38px;
+  margin-top: 20px;
+  color: #FFF;
+  font-size: 11px;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+}

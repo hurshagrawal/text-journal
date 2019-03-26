@@ -14,6 +14,7 @@ defmodule QuiltWeb.JournalController do
 
       render(conn, "index.html",
         title: "Journal Settings",
+        current_user: current_user,
         show_sign_out: true,
         journal: journal,
         subscriber_count: subscriber_count,
