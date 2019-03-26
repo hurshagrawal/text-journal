@@ -13,6 +13,8 @@ defmodule QuiltWeb.JournalController do
       replies_count = Content.get_journal_replies_count(journal)
 
       render(conn, "index.html",
+        title: "Journal Settings",
+        show_sign_out: true,
         journal: journal,
         subscriber_count: subscriber_count,
         posts_count: posts_count,

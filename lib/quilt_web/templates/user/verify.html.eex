@@ -1,21 +1,16 @@
-<div class="container">
-  <header>
-    <div class="header-title">Quilt</div>
-  </header>
-  <div class="content">
-    <div class=content-card">
-      <div class="content-card-section">
-        <div class="content-card-section-title">Please type in your verification code.</div>
+<div class="content">
+  <div class=content-card">
+    <div class="content-card-section">
+      <div class="content-card-section-title">Please type in your verification code.</div>
 
-        <%= form_for @conn, Routes.user_path(@conn, :verify_user), fn f -> %>
-          <%= label f, :code %>
-          <%= number_input f, :code %>
+      <%= form_for @conn, Routes.user_path(@conn, :verify_user), fn f -> %>
+        <%= label f, :code %>
+        <%= number_input f, :code %>
 
-          <div>
-            <%= submit "Log in" %>
-          </div>
-        <% end %>
-      </div>
+        <div>
+          <%= submit "Log in" %>
+        </div>
+      <% end %>
     </div>
   </div>
 </div>
