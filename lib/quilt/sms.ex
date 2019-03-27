@@ -1,9 +1,6 @@
 defmodule Quilt.Sms do
   alias Quilt.Sms.Twilio
 
-  defdelegate send_sms(message, to_number, from_number), to: Twilio
-  defdelegate send_mms(message, media_urls, to_number, from_number), to: Twilio
-
   @doc """
   Sends a verification code SMS to the given number via Twilio.
   """
@@ -38,15 +35,25 @@ defmodule Quilt.Sms do
     System.get_env("DEFAULT_PHONE_NUMBER") || "+12407433481"
   end
 
+  def send_sms(message, to_number, from_number) do
+    Task.async(fn ->
+      Twilio.send_sms(message, to_number, from_number)
+    end)
+  end
+
+  def send_mms(message, media_urls, to_number, from_number) do
+    Task.async(fn ->
+      Twilio.send_mms(message, media_urls, to_number, from_number)
+    end)
+  end
+
   def fan_out_sms(body, media_urls \\ [], to_numbers, from_number) do
     Enum.map(to_numbers, fn to_number ->
       has_body = body |> String.trim() |> String.length() > 0
       has_media = Enum.count(media_urls) > 0
 
       if has_body || has_media do
-        Task.async(fn ->
-          send_mms(body, media_urls, to_number, from_number)
-        end)
+        send_mms(body, media_urls, to_number, from_number)
       end
     end)
   end
