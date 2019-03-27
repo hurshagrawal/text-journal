@@ -83,6 +83,11 @@ defmodule QuiltWeb.UserController do
       sanitized_phone = Accounts.normalize_phone_number(phone_number)
 
       case Accounts.get_user(phone_number: sanitized_phone) do
+        nil ->
+          conn
+          |> put_flash(:error, "Oops! No user was found with that number.")
+          |> redirect(to: Routes.user_path(conn, :index))
+
         user ->
           {:ok, user} = Accounts.regenerate_verification_code(user)
           Sms.send_verification_code(user.phone_number, user.verification_code)
@@ -90,11 +95,6 @@ defmodule QuiltWeb.UserController do
           conn
           |> put_session(:user_to_verify_id, user.id)
           |> redirect(to: Routes.user_path(conn, :verify_index))
-
-        nil ->
-          conn
-          |> put_flash(:error, "Oops! No user was found with that number.")
-          |> redirect(to: Routes.user_path(conn, :index))
       end
     else
       conn

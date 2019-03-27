@@ -19,6 +19,9 @@ defmodule Quilt.Content.JournalMembership do
     |> cast(attrs, [:type, :journal_id, :user_id, :subscribed])
     |> set_default_type()
     |> validate_required([:type, :journal_id, :user_id, :subscribed])
+    |> unique_constraint(:journal_and_user,
+      name: :users_journal_id_user_id_index
+    )
   end
 
   def set_default_type(%Ecto.Changeset{} = changeset) do
