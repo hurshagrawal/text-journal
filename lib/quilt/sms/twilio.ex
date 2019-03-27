@@ -34,13 +34,22 @@ defmodule Quilt.Sms.Twilio do
   end
 
   def send_sms(message, to_number, from_number) do
-    send_message(
+    request_body =
       URI.encode_query(%{
         From: from_number,
         To: to_number,
         Body: message
       })
-    )
+
+    IO.puts("Twilio: Sending SMS to #{to_number}")
+
+    case send_message(request_body) do
+      {:ok, _} ->
+        IO.puts("Twilio: SMS sent successfully to #{to_number}")
+
+      {:error, response_body} ->
+        IO.puts("Twilio: SMS error to #{to_number} - #{response_body}")
+    end
   end
 
   def send_mms(message, media_urls, to_number, from_number) do
@@ -56,7 +65,15 @@ defmodule Quilt.Sms.Twilio do
       |> Enum.map(&("&MediaUrl=" <> URI.encode(&1)))
       |> Enum.join("")
 
-    send_message(number_params <> url_params)
+    IO.puts("Twilio: Sending MMS to #{to_number}")
+
+    case send_message(number_params <> url_params) do
+      {:ok, _} ->
+        IO.puts("Twilio: MMS sent successfully to #{to_number}")
+
+      {:error, body} ->
+        IO.puts("Twilio: MMS error to #{to_number} - #{body}")
+    end
   end
 
   defp send_message(body) do
@@ -68,7 +85,7 @@ defmodule Quilt.Sms.Twilio do
     if response.status_code == 201 do
       {:ok, response.body}
     else
-      :error
+      {:error, response.body}
     end
   end
 end
