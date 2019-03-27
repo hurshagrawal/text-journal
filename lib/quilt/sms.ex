@@ -40,6 +40,7 @@ defmodule Quilt.Sms do
 
   def fan_out_sms(body, media_urls \\ [], to_numbers, from_number) do
     Enum.map(to_numbers, fn to_number ->
+      # TODO: Combine these to a single sms call
       if body |> String.trim() |> String.length() > 0 do
         send_sms(body, to_number, from_number)
       end

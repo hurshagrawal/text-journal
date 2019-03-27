@@ -28,9 +28,12 @@ defmodule Quilt.Accounts do
 
     case Repo.one(query) do
       nil ->
-        attrs
-        |> Enum.into(%{})
-        |> create_user()
+        {:ok, user} =
+          attrs
+          |> Enum.into(%{})
+          |> create_user()
+
+        user
 
       user ->
         user
