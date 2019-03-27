@@ -22,7 +22,10 @@ defmodule QuiltWeb.JournalController do
         replies_count: replies_count
       )
     else
-      render(conn, "index.html", journal: nil)
+      render(conn, "index.html",
+        journal: nil,
+        current_user: current_user
+      )
     end
   end
 

@@ -1,0 +1,16 @@
+<div class="content-card">
+  <div class="card--section">
+    <div class="card--section--title">
+      Journals
+    </div>
+
+    <%= for journal <- @journals do %>
+      <div class="card--section--item">
+        <a href="<%= Routes.admin_path(@conn, :journal, journal.id) %>">
+          <%= journal.name %>
+        </a>
+      </div>
+    <% end %>
+  </div>
+</div>
+

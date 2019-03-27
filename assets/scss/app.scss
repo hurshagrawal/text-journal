@@ -158,3 +158,41 @@ main {
   letter-spacing: 0.6px;
   text-transform: uppercase;
 }
+
+.post-list {
+  display: flex;
+  flex-direction: column;
+}
+
+  .post-list--post {
+    margin-bottom: 20px;
+
+    &.owner {
+      align-self: flex-start;
+    }
+
+    &.subscriber {
+      align-self: flex-end;
+
+      text-align: right;
+    }
+  }
+
+    .post-list--post--metadata {
+      font-size: 12px;
+    }
+
+      .post-list--post--metadata--time {
+        color: rgba(0, 0, 0, 0.55);
+        margin-left: 5px;
+      }
+
+    .post-list--post--body {
+      box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.02);
+      border-radius: 7px;
+      border: solid 1px #e9e9e9;
+      padding: 12px;
+      margin-top: 5px;
+      font-size: 14px;
+      min-width: 300px;
+    }

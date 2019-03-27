@@ -1,5 +1,4 @@
 defmodule QuiltWeb.Controllers.Helpers do
-  import Plug.Conn
   import Phoenix.Controller
 
   alias QuiltWeb.Guardian.Plug, as: Guardian

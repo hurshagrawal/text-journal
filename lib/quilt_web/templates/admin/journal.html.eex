@@ -1,0 +1,86 @@
+<div class="content-card">
+  <div class="card--section">
+    <div class="card--section--title">
+      <%= @journal.name %>
+    </div>
+
+    <div class="card--section--item">
+      <div class="card--section--item-label">
+        <b>Number</b>
+      </div>
+      <div class="card--section--item-box uneditable">
+        <%= @journal.phone_number %>
+      </div>
+    </div>
+
+    <div class="card--section--item">
+      <div class="card--section--item-label">
+        <b>Stats</b>
+      </div>
+      <div class="card--section--item-box uneditable">
+        <div class="card--section--item-box--column">
+          <div><b><%= @subscriber_count %></b></div>
+          <div>Subscribers</div>
+        </div>
+        <div class="card--section--item-box--column">
+          <div><b><%= @posts_count %></b></div>
+          <div>Posts</div>
+        </div>
+        <div class="card--section--item-box--column">
+          <div><b><%= @replies_count %></b></div>
+          <div>Replies</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card--section--item">
+      <div class="card--section--item-label">
+        <b>To New Subscribers...</b>
+      </div>
+      <div class="card--section--item-box uneditable">
+        <%= @journal.onboarding_text %>
+      </div>
+    </div>
+
+    <div class="card--section--item">
+      <div class="card--section--item-label">
+        <b>When a Follower Responds...</b>
+      </div>
+
+      <div class="card--section--item-box uneditable">
+        <%= @journal.subscriber_response_text %>
+      </div>
+    </div>
+
+    <div class="card--section--item">
+      <div class="card--section--item-label">
+        <b>Posts</b>
+      </div>
+      <div class="post-list">
+        <%= for post <- @posts do %>
+          <div class="post-list--post <%= owner_or_subscriber_class(post, @journal_owner_id) %>">
+            <div class="post-list--post--metadata">
+              <b><%= post.user.name || post.user.phone_number %></b>
+              <span class="post-list--post--metadata--time">
+                <%= Timex.from_now(post.inserted_at) %>
+              </span>
+            </div>
+
+            <%= if post.body do %>
+              <div class="post-list--post--body">
+                <%= post.body %>
+              </div>
+            <% end %>
+
+            <%= for url <- (post.media_urls || []) do %>
+              <div class="post-list--post--body">
+                <a href="<%= url %>" target="_blank">Media Attachment &#8594;</a>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+

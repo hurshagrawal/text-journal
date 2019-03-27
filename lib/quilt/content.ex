@@ -19,6 +19,10 @@ defmodule Quilt.Content do
     |> Repo.one()
   end
 
+  def get_journals() do
+    Repo.all(Journal)
+  end
+
   def get_journal(attrs) do
     Repo.get_by(Journal, attrs)
   end
@@ -38,6 +42,15 @@ defmodule Quilt.Content do
     else
       nil
     end
+  end
+
+  def get_journal_posts(journal) do
+    Repo.all(
+      from p in Post,
+        where: p.journal_id == ^journal.id,
+        order_by: [asc: p.id],
+        preload: [:user]
+    )
   end
 
   def get_journal_subscribers_count(journal) do

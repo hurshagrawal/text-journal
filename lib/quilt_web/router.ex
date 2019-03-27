@@ -39,6 +39,9 @@ defmodule QuiltWeb.Router do
     get "/journal", JournalController, :index
     post "/journal", JournalController, :create
     put "/journal/:id", JournalController, :update
+
+    get "/admin", AdminController, :index
+    get "/admin/journals/:journal_id", AdminController, :journal
   end
 
   scope "/", QuiltWeb do

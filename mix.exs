@@ -48,6 +48,7 @@ defmodule Quilt.MixProject do
       {:httpoison, "~> 1.5"},
       {:poison, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
+      {:timex, "~> 3.5"},
       {:credo, "~> 1.0.0", only: [:dev, :test], runtime: false}
     ]
   end
