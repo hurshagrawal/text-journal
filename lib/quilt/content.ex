@@ -24,7 +24,12 @@ defmodule Quilt.Content do
   end
 
   def get_journal(attrs) do
-    Repo.get_by(Journal, attrs)
+    Repo.one(
+      from j in Journal,
+        where: ^attrs,
+        order_by: [desc: j.id],
+        limit: 1
+    )
   end
 
   def get_membership(attrs) do

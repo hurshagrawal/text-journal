@@ -43,11 +43,12 @@ defmodule Quilt.Sms.Twilio do
     )
   end
 
-  def send_mms(media_urls, to_number, from_number) do
+  def send_mms(message, media_urls, to_number, from_number) do
     number_params =
       URI.encode_query(%{
         From: from_number,
-        To: to_number
+        To: to_number,
+        Body: message
       })
 
     url_params =
