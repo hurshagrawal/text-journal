@@ -2,7 +2,7 @@ defmodule QuiltWeb.AdminController do
   use QuiltWeb, :controller
   use QuiltWeb.GuardedController
 
-  alias Quilt.{Accounts, Content, Sms}
+  alias Quilt.Content
 
   @admin_user_ids [1, 2, 8]
 
@@ -42,7 +42,7 @@ defmodule QuiltWeb.AdminController do
   end
 
   defp ensure_authorized(conn, _params) do
-    with user <- get_current_user(conn),
+    with user when user != nil <- get_current_user(conn),
          true <- Enum.member?(@admin_user_ids, user.id) do
       conn
     else
