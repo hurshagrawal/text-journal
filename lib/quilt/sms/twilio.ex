@@ -48,7 +48,7 @@ defmodule Quilt.Sms.Twilio do
         IO.puts("Twilio: SMS sent successfully to #{to_number}")
 
       {:error, response_body} ->
-        IO.puts("Twilio: SMS error to #{to_number} - #{response_body}")
+        IO.inspect("Twilio: SMS error to #{to_number} - #{response_body}")
     end
   end
 
@@ -72,7 +72,7 @@ defmodule Quilt.Sms.Twilio do
         IO.puts("Twilio: MMS sent successfully to #{to_number}")
 
       {:error, body} ->
-        IO.puts("Twilio: MMS error to #{to_number} - #{body}")
+        IO.inspect("Twilio: MMS error to #{to_number} - #{body}")
     end
   end
 
