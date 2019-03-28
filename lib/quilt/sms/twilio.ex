@@ -72,8 +72,12 @@ defmodule Quilt.Sms.Twilio do
     IO.puts("Twilio: Sending MMS to #{to_number}")
 
     case send_message(number_params <> url_params) do
-      {:ok, _} ->
-        IO.puts("Twilio: MMS sent successfully to #{to_number}")
+      {:ok, body} ->
+        IO.puts(
+          "Twilio: MMS sent successfully to #{to_number} with body- #{
+            inspect(body)
+          }"
+        )
 
       {:error, body} ->
         IO.puts("Twilio: MMS error to #{to_number} with body- #{inspect(body)}")
