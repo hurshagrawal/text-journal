@@ -48,14 +48,22 @@ defmodule Quilt.Sms do
   end
 
   def fan_out_sms(body, media_urls \\ [], to_numbers, from_number) do
-    IO.puts("Webhook: Fanning out message from: #{from_number}")
-    Enum.map(to_numbers, fn to_number ->
-      has_body = body |> String.trim() |> String.length() > 0
-      has_media = Enum.count(media_urls) > 0
+    has_body = body |> String.trim() |> String.length() > 0
+    has_media = Enum.count(media_urls) > 0
 
-      if has_body || has_media do
+    if has_body || has_media do
+      IO.puts(
+        "Webhook: Fanning out message from #{from_number} to #{
+          Enum.count(media_urls)
+        } numbers."
+      )
+
+      IO.puts("Body: #{inspect(body)}")
+      IO.puts("Media Urls: #{inspect(media_urls)}")
+
+      Enum.map(to_numbers, fn to_number ->
         send_mms(body, media_urls, to_number, from_number)
-      end
-    end)
+      end)
+    end
   end
 end
