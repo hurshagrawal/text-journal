@@ -15,6 +15,8 @@ defmodule QuiltWeb.WebhookController do
       "NumMedia" => media_count_str
     } = params
 
+    IO.puts("Incoming webhook with params: #{inspect(params)}")
+
     case Content.get_journal(phone_number: to_number) do
       nil ->
         Sms.send_sms(
