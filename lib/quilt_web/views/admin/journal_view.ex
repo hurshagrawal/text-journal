@@ -1,4 +1,4 @@
-defmodule QuiltWeb.AdminView do
+defmodule QuiltWeb.Admin.JournalView do
   use QuiltWeb, :view
 
   def owner_or_subscriber_class(post, journal_owner_id) do

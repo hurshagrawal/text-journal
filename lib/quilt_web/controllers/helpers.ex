@@ -4,6 +4,8 @@ defmodule QuiltWeb.Controllers.Helpers do
   alias QuiltWeb.Guardian.Plug, as: Guardian
   alias QuiltWeb.Router.Helpers, as: Routes
 
+  @admin_user_ids [1, 2, 8]
+
   def get_current_user(conn) do
     Guardian.current_resource(conn)
   end
@@ -29,6 +31,15 @@ defmodule QuiltWeb.Controllers.Helpers do
       conn
     else
       redirect(conn, to: Routes.journal_path(conn, :index))
+    end
+  end
+
+  def ensure_admin_authenticated(conn, _params) do
+    with user when user != nil <- get_current_user(conn),
+         true <- Enum.member?(@admin_user_ids, user.id) do
+      conn
+    else
+      _ -> redirect(conn, to: Routes.user_path(conn, :index))
     end
   end
 
