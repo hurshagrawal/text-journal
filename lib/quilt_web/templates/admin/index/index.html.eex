@@ -6,11 +6,17 @@
 
     <%= for journal <- @journals do %>
       <div class="card--section--item">
-        <a href="<%= Routes.admin_path(@conn, :journal, journal.id) %>">
+        <a href="<%= Routes.admin_journal_path(@conn, :show, journal.id) %>">
           <%= journal.name %>
         </a>
       </div>
     <% end %>
+
+    <a href="<%= Routes.admin_journal_path(@conn, :new) %>">
+      <div class="card--button">
+        + New Journal
+      </div>
+    </a>
   </div>
 </div>
 

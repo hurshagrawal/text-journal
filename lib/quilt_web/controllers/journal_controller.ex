@@ -30,25 +30,13 @@ defmodule QuiltWeb.JournalController do
   end
 
   def create(conn, %{"name" => name}, current_user) do
-    journal_attrs = %{
-      name: name,
-      onboarding_text: Content.default_onboarding_text(),
-      subscriber_response_text: Content.default_subscriber_response_text()
-    }
+    case Content.create_user_journal(current_user, name) do
+      {:ok, journal} ->
+        redirect(conn, to: Routes.journal_path(conn, :index))
 
-    case Content.create_user_journal(current_user, journal_attrs) do
-      {:ok, %{journal: journal}} ->
-        number = Sms.get_new_sms_number()
-        Content.update_journal(journal, %{phone_number: number})
-
+      {:error, error} ->
         conn
-        |> redirect(to: Routes.journal_path(conn, :index))
-
-      {:error, _failed_operation, %Ecto.Changeset{} = changeset, _changes} ->
-        error_messages = Enum.join(changeset_errors(changeset), ", ")
-
-        conn
-        |> put_flash(:error, "Oops! #{String.capitalize(error_messages)}.")
+        |> put_flash(:error, error)
         |> redirect(to: Routes.journal_path(conn, :index))
     end
   end

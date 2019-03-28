@@ -8,6 +8,10 @@ body {
   font-family: 'Lato', sans-serif;
   background-color: #fafafa;
   margin: 0;
+
+  a {
+    text-decoration: none;
+  }
 }
 
 .alert.alert-info {
@@ -157,6 +161,10 @@ main {
   font-size: 11px;
   letter-spacing: 0.6px;
   text-transform: uppercase;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .post-list {

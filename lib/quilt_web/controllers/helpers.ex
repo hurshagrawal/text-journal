@@ -4,6 +4,8 @@ defmodule QuiltWeb.Controllers.Helpers do
   alias QuiltWeb.Guardian.Plug, as: Guardian
   alias QuiltWeb.Router.Helpers, as: Routes
 
+  @admin_user_ids [1, 2, 8]
+
   def get_current_user(conn) do
     Guardian.current_resource(conn)
   end
@@ -32,18 +34,12 @@ defmodule QuiltWeb.Controllers.Helpers do
     end
   end
 
-  def changeset_errors(%Ecto.Changeset{} = changeset) do
-    changeset.errors
-    |> Enum.map(fn {k, v} -> "#{k} #{render_detail(v)}" end)
-  end
-
-  defp render_detail({message, values}) do
-    Enum.reduce(values, message, fn {k, v}, acc ->
-      String.replace(acc, "%{#{k}}", to_string(v))
-    end)
-  end
-
-  defp render_detail(message) do
-    message
+  def ensure_admin_authenticated(conn, _params) do
+    with user when user != nil <- get_current_user(conn),
+         true <- Enum.member?(@admin_user_ids, user.id) do
+      conn
+    else
+      _ -> redirect(conn, to: Routes.user_path(conn, :index))
+    end
   end
 end

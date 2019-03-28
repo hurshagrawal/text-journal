@@ -1,9 +1,10 @@
 defmodule Quilt.Content do
   import Ecto.Query, warn: false
+  import Quilt.Helpers
 
   alias Ecto.Multi
 
-  alias Quilt.Repo
+  alias Quilt.{Repo, Sms}
   alias Quilt.Accounts.User
   alias Quilt.Content.Journal
   alias Quilt.Content.Post
@@ -100,13 +101,36 @@ defmodule Quilt.Content do
   @doc """
   Creates a journal for a user.
   """
-  def create_user_journal(user, attrs) do
-    Multi.new()
-    |> Multi.insert(:journal, Journal.changeset(%Journal{}, attrs))
-    |> Multi.insert(:journal_membership, fn %{journal: journal} ->
-      Ecto.build_assoc(journal, :journal_memberships, user: user, type: "owner")
-    end)
-    |> Repo.transaction()
+  def create_user_journal(user, name) do
+    attrs = %{
+      name: name,
+      onboarding_text: default_onboarding_text(),
+      subscriber_response_text: default_subscriber_response_text()
+    }
+
+    result =
+      Multi.new()
+      |> Multi.insert(:journal, Journal.changeset(%Journal{}, attrs))
+      |> Multi.insert(:journal_membership, fn %{journal: journal} ->
+        Ecto.build_assoc(journal, :journal_memberships,
+          user: user,
+          type: "owner"
+        )
+      end)
+      |> Repo.transaction()
+
+    case result do
+      {:ok, %{journal: journal}} ->
+        number = Sms.get_new_sms_number()
+        update_journal(journal, %{phone_number: number})
+
+        {:ok, journal}
+
+      {:error, _failed_operation, %Ecto.Changeset{} = changeset, _changes} ->
+        error_messages = Enum.join(changeset_errors(changeset), ", ")
+
+        {:error, "Oops! #{String.capitalize(error_messages)}."}
+    end
   end
 
   def create_post(journal, user, body, media_urls) do
@@ -157,11 +181,11 @@ defmodule Quilt.Content do
     |> Repo.update!()
   end
 
-  def default_onboarding_text do
+  defp default_onboarding_text do
     "Hey! Thanks for following my walk. I'll text you from this number each day once my walk begins on April 1st.\n\nAnd feel free to reply to my messages as well - or reply \"stop\" if you've had enough.\n\nFinally, add this number to your contacts book for the best experience."
   end
 
-  def default_subscriber_response_text do
+  defp default_subscriber_response_text do
     "Hi there! I've decided to unplug during my walk and turn off all notifications. I'll see this when my walk ends. Keep the replies coming in the meantime!"
   end
 end

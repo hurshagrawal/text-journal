@@ -1,0 +1,29 @@
+<div class="content-card">
+  <%= form_for @conn, Routes.admin_journal_path(@conn, :create), fn f -> %>
+    <div class="card--section">
+      <div class="card--section--title">
+        Create a Journal
+      </div>
+
+      <div class="card--section--item">
+        <div class="card--section--item-label">
+          <b>Journal Name</b>
+        </div>
+        <div class="card--section--item-box">
+          <%= text_input f, :name %>
+        </div>
+      </div>
+
+      <div class="card--section--item">
+        <div class="card--section--item-label">
+          <b>Owner Phone Number</b>
+        </div>
+        <div class="card--section--item-box">
+          <%= text_input f, :phone_number %>
+        </div>
+      </div>
+
+      <%= submit "Create", class: "card--button" %>
+    </div>
+  <% end %>
+</div>

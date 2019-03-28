@@ -1,7 +1,8 @@
 defmodule Quilt.Accounts do
   import Ecto.Query, warn: false
-  alias Quilt.Repo
+  import Quilt.Helpers
 
+  alias Quilt.Repo
   alias Quilt.Accounts.User
 
   defdelegate phone_number_valid?(raw_phone_string), to: User
@@ -28,15 +29,22 @@ defmodule Quilt.Accounts do
 
     case Repo.one(query) do
       nil ->
-        {:ok, user} =
+        result =
           attrs
           |> Enum.into(%{})
           |> create_user()
 
-        user
+        case result do
+          {:error, %Ecto.Changeset{} = changeset} ->
+            error_messages = Enum.join(changeset_errors(changeset), ", ")
+            {:error, "Oops! #{String.capitalize(error_messages)}."}
+
+          {:ok, user} ->
+            {:ok, user}
+        end
 
       user ->
-        user
+        {:ok, user}
     end
   end
 
