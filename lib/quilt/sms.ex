@@ -54,7 +54,7 @@ defmodule Quilt.Sms do
     if has_body || has_media do
       IO.puts(
         "Webhook: Fanning out message from #{from_number} to #{
-          Enum.count(media_urls)
+          Enum.count(to_numbers)
         } numbers."
       )
 
