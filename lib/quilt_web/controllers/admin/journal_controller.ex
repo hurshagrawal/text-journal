@@ -2,7 +2,7 @@ defmodule QuiltWeb.Admin.JournalController do
   use QuiltWeb, :controller
   use QuiltWeb.GuardedController
 
-  alias Quilt.Content
+  alias Quilt.{Accounts, Content}
 
   plug :ensure_admin_authenticated
 
@@ -15,14 +15,27 @@ defmodule QuiltWeb.Admin.JournalController do
 
   def create(
         conn,
-        %{"owner_phone_number" => owner_phone_number, "name" => name},
+        %{"phone_number" => phone_number, "name" => name},
         current_user
       ) do
-    # TODO: DRY up journal_controller#create by pushing logic into Content
-    # TODO: Hook this up to create new journals
-    redirect(conn,
-      to: Routes.admin_index_path(conn, :show, journal_id: 1)
-    )
+    normalized_number =
+      if Accounts.phone_number_valid?(phone_number) do
+        Accounts.normalize_phone_number(phone_number)
+      else
+        phone_number
+      end
+
+    with {:ok, user} <-
+           Accounts.get_or_create_user(phone_number: normalized_number),
+         {:ok, journal} <- Content.create_user_journal(user, name) do
+      conn
+      |> redirect(to: Routes.admin_journal_path(conn, :show, journal.id))
+    else
+      {:error, error} ->
+        conn
+        |> put_flash(:error, error)
+        |> redirect(to: Routes.admin_journal_path(conn, :new))
+    end
   end
 
   def show(conn, %{"journal_id" => journal_id}, current_user) do

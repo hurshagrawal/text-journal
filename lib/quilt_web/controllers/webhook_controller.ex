@@ -40,7 +40,7 @@ defmodule QuiltWeb.WebhookController do
             []
           end
 
-        user = Accounts.get_or_create_user(phone_number: from_number)
+        {:ok, user} = Accounts.get_or_create_user(phone_number: from_number)
         is_stop_post = body |> String.trim() |> String.downcase() == "stop"
 
         unless is_stop_post do

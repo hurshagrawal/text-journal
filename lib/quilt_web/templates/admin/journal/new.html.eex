@@ -1,5 +1,5 @@
 <div class="content-card">
-  <%= form_for @conn, Routes.journal_path(@conn, :create), fn f -> %>
+  <%= form_for @conn, Routes.admin_journal_path(@conn, :create), fn f -> %>
     <div class="card--section">
       <div class="card--section--title">
         Create a Journal
@@ -7,7 +7,7 @@
 
       <div class="card--section--item">
         <div class="card--section--item-label">
-          <b>Name</b>
+          <b>Journal Name</b>
         </div>
         <div class="card--section--item-box">
           <%= text_input f, :name %>
@@ -19,7 +19,7 @@
           <b>Owner Phone Number</b>
         </div>
         <div class="card--section--item-box">
-          <%= text_input f, :owner_phone_number %>
+          <%= text_input f, :phone_number %>
         </div>
       </div>
 

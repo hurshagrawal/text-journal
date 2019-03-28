@@ -25,6 +25,7 @@ defmodule QuiltWeb do
       import QuiltWeb.Gettext
       alias QuiltWeb.Router.Helpers, as: Routes
 
+      import Quilt.Helpers
       import QuiltWeb.Controllers.Helpers
     end
   end
