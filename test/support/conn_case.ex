@@ -23,6 +23,9 @@ defmodule QuiltWeb.ConnCase do
 
       # The default endpoint for testing
       @endpoint QuiltWeb.Endpoint
+
+      import Quilt.Factory
+      import QuiltWeb.Guardian
     end
   end
 

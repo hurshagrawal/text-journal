@@ -1,4 +1,5 @@
 defmodule QuiltWeb.Controllers.Helpers do
+  import Plug.Conn
   import Phoenix.Controller
 
   alias QuiltWeb.Guardian.Plug, as: Guardian
@@ -20,7 +21,9 @@ defmodule QuiltWeb.Controllers.Helpers do
 
   def ensure_authenticated(conn, _params) do
     if get_current_user(conn) == nil do
-      redirect(conn, to: Routes.user_path(conn, :index))
+      conn
+      |> redirect(to: Routes.user_path(conn, :index))
+      |> halt()
     else
       conn
     end
@@ -30,7 +33,9 @@ defmodule QuiltWeb.Controllers.Helpers do
     if get_current_user(conn) == nil do
       conn
     else
-      redirect(conn, to: Routes.journal_path(conn, :index))
+      conn
+      |> redirect(to: Routes.journal_path(conn, :index))
+      |> halt()
     end
   end
 

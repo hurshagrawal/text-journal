@@ -16,7 +16,7 @@ defmodule QuiltWeb.Admin.JournalController do
   def create(
         conn,
         %{"phone_number" => phone_number, "name" => name},
-        current_user
+        _current_user
       ) do
     normalized_number =
       if Accounts.phone_number_valid?(phone_number) do

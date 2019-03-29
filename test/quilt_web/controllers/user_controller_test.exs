@@ -1,108 +1,65 @@
 defmodule QuiltWeb.UserControllerTest do
   use QuiltWeb.ConnCase
 
-  alias Quilt.Accounts
+  alias QuiltWeb.Guardian.Plug, as: Guardian
 
-  @create_attrs %{
-    last_login_at: ~N[2010-04-17 14:00:00],
-    name: "some name",
-    phone: 42,
-    verification_code: "some verification_code"
-  }
-  @update_attrs %{
-    last_login_at: ~N[2011-05-18 15:01:01],
-    name: "some updated name",
-    phone: 43,
-    verification_code: "some updated verification_code"
-  }
-  @invalid_attrs %{
-    last_login_at: nil,
-    name: nil,
-    phone: nil,
-    verification_code: nil
-  }
-
-  def fixture(:user) do
-    {:ok, user} = Accounts.create_user(@create_attrs)
-    user
-  end
-
-  describe "index" do
-    test "lists all users", %{conn: conn} do
+  describe "get :index" do
+    test "renders the sign up page when unauthenticated", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :index))
-      assert html_response(conn, 200) =~ "Listing Users"
-    end
-  end
-
-  describe "new user" do
-    test "renders form", %{conn: conn} do
-      conn = get(conn, Routes.user_path(conn, :new))
-      assert html_response(conn, 200) =~ "New User"
-    end
-  end
-
-  describe "create user" do
-    test "redirects to show when data is valid", %{conn: conn} do
-      conn = post(conn, Routes.user_path(conn, :create), user: @create_attrs)
-
-      assert %{id: id} = redirected_params(conn)
-      assert redirected_to(conn) == Routes.user_path(conn, :show, id)
-
-      conn = get(conn, Routes.user_path(conn, :show, id))
-      assert html_response(conn, 200) =~ "Show User"
+      assert html_response(conn, 200) =~ "Sign up"
     end
 
-    test "renders errors when data is invalid", %{conn: conn} do
-      conn = post(conn, Routes.user_path(conn, :create), user: @invalid_attrs)
-      assert html_response(conn, 200) =~ "New User"
-    end
-  end
+    test "redirects to journal page when authenticated", %{conn: conn} do
+      user = insert(:user)
 
-  describe "edit user" do
-    setup [:create_user]
-
-    test "renders form for editing chosen user", %{conn: conn, user: user} do
-      conn = get(conn, Routes.user_path(conn, :edit, user))
-      assert html_response(conn, 200) =~ "Edit User"
-    end
-  end
-
-  describe "update user" do
-    setup [:create_user]
-
-    test "redirects when data is valid", %{conn: conn, user: user} do
       conn =
-        put(conn, Routes.user_path(conn, :update, user), user: @update_attrs)
+        conn
+        |> Guardian.sign_in(user)
+        |> get(Routes.user_path(conn, :index))
 
-      assert redirected_to(conn) == Routes.user_path(conn, :show, user)
-
-      conn = get(conn, Routes.user_path(conn, :show, user))
-      assert html_response(conn, 200) =~ "some updated name"
-    end
-
-    test "renders errors when data is invalid", %{conn: conn, user: user} do
-      conn =
-        put(conn, Routes.user_path(conn, :update, user), user: @invalid_attrs)
-
-      assert html_response(conn, 200) =~ "Edit User"
+      assert redirected_to(conn) == Routes.journal_path(conn, :index)
     end
   end
 
-  describe "delete user" do
-    setup [:create_user]
+  describe "post :create" do
+    test "errors if no params are given" do
+    end
 
-    test "deletes chosen user", %{conn: conn, user: user} do
-      conn = delete(conn, Routes.user_path(conn, :delete, user))
-      assert redirected_to(conn) == Routes.user_path(conn, :index)
+    test "errors if an invalid phone number is given" do
+    end
 
-      assert_error_sent 404, fn ->
-        get(conn, Routes.user_path(conn, :show, user))
-      end
+    test "creates a user and redirects to verify" do
+      # Validate that the user in the db has attrs + verification code
+      # Stub Sms.Twilio and ensure mocks are called
+      # Ensure session has a :user_to_verify_id
+      # Ensure redirect works
     end
   end
 
-  defp create_user(_) do
-    user = fixture(:user)
-    {:ok, user: user}
+  describe "get :verify_index" do
+    test "redirects to home if no id is found in session" do
+    end
+
+    test "renders the verification page" do
+    end
+  end
+
+  describe "post :verify_user" do
+    test "redirects back with flash message if code is incorrect" do
+    end
+
+    test "signs the user in if the code is correct" do
+    end
+  end
+
+  describe "post :sign_in" do
+    test "errors and redirects back if the phone is invalid" do
+    end
+
+    test "errors and redirects back if no user was found" do
+    end
+
+    test "sends a verification code and redirects to verify" do
+    end
   end
 end
