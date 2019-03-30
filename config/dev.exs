@@ -74,6 +74,9 @@ config :quilt, Quilt.Repo,
   hostname: "localhost",
   pool_size: 10
 
+# Dynamically loaded modules
+config :quilt, :twilio_client, Quilt.Sms.TwilioDev
+
 # Finally import the config/dev.secret.exs which should be versioned
 # separately.
 import_config "dev.secret.exs"

@@ -16,3 +16,6 @@ config :quilt, Quilt.Repo,
   database: "quilt_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
+
+# Dynamically loaded modules
+config :quilt, :twilio_client, Quilt.Sms.TwilioInMemory

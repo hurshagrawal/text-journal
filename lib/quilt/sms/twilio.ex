@@ -33,6 +33,10 @@ defmodule Quilt.Sms.Twilio do
     end
   end
 
+  def get_default_sms_number() do
+    System.get_env("DEFAULT_PHONE_NUMBER") || "+12407433481"
+  end
+
   def send_sms(message, to_number, from_number) do
     request_body =
       URI.encode_query(%{

@@ -78,3 +78,6 @@ config :quilt,
   twilio_account_sid: System.get_env("TWILIO_ACCOUNT_ID"),
   twilio_auth_token: System.get_env("TWILIO_AUTH_TOKEN"),
   twilio_twiml_sid: System.get_env("TWILIO_TWIML_SID")
+
+# Dynamically loaded modules
+config :quilt, :twilio_client, Quilt.Sms.Twilio

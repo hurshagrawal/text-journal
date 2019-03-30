@@ -1,5 +1,5 @@
 defmodule Quilt.Sms do
-  alias Quilt.Sms.Twilio
+  @twilio_client Application.get_env(:quilt, :twilio_client)
 
   @doc """
   Sends a verification code SMS to the given number via Twilio.
@@ -8,7 +8,7 @@ defmodule Quilt.Sms do
     send_sms(
       "Your Quilt verification code is: #{verification_code}",
       phone_number,
-      get_default_sms_number()
+      @twilio_client.get_default_sms_number()
     )
   end
 
@@ -16,34 +16,25 @@ defmodule Quilt.Sms do
   Provisions a new US phone number. WARNING: This method call costs $1.
   """
   def get_new_sms_number() do
-    # TODO: Convert this to a feature flag or ENV var. This is hacky AF.
-    if Mix.env() == :prod do
-      {:ok, phone_number} =
-        Twilio.get_available_phone_numbers()
-        |> List.first()
-        |> Map.fetch("phone_number")
+    {:ok, phone_number} =
+      @twilio_client.get_available_phone_numbers()
+      |> List.first()
+      |> Map.fetch("phone_number")
 
-      {:ok, phone_number} = Twilio.provision_phone_number(phone_number)
+    {:ok, phone_number} = @twilio_client.provision_phone_number(phone_number)
 
-      phone_number
-    else
-      get_default_sms_number()
-    end
-  end
-
-  def get_default_sms_number() do
-    System.get_env("DEFAULT_PHONE_NUMBER") || "+12407433481"
+    phone_number
   end
 
   def send_sms(message, to_number, from_number) do
     Task.async(fn ->
-      Twilio.send_sms(message, to_number, from_number)
+      @twilio_client.send_sms(message, to_number, from_number)
     end)
   end
 
   def send_mms(message, media_urls, to_number, from_number) do
     Task.async(fn ->
-      Twilio.send_mms(message, media_urls, to_number, from_number)
+      @twilio_client.send_mms(message, media_urls, to_number, from_number)
     end)
   end
 

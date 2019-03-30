@@ -182,7 +182,7 @@ defmodule Quilt.Content do
   end
 
   defp default_onboarding_text do
-    "Hey! Thanks for subscribing to my journal. Add this # to your Contacts, and reply "stop" anytime if you decide you're over it."
+    "Hey! Thanks for subscribing to my journal. Add this # to your Contacts, and reply \"stop\" anytime if you decide you're over it."
   end
 
   defp default_subscriber_response_text do
