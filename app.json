@@ -5,5 +5,8 @@
         "test": "MIX_ENV=test elixir -S mix test --exclude pending"
       }
     }
-  }
+  },
+  "buildpacks": [
+    {"url": "https://github.com/HashNuke/heroku-buildpack-elixir"}
+  ]
 }
