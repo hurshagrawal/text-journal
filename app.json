@@ -1,0 +1,9 @@
+{
+  "environments": {
+    "test": {
+      "scripts": {
+        "test": "MIX_ENV=test elixir -S mix test --exclude pending"
+      }
+    }
+  }
+}
