@@ -4,7 +4,7 @@ defmodule Quilt.Sms.TwilioInMemory do
   end
 
   def clear do
-    Agent.update(__MODULE__, fn state -> [] end)
+    Agent.update(__MODULE__, fn _state -> [] end)
   end
 
   def requests do
@@ -12,7 +12,7 @@ defmodule Quilt.Sms.TwilioInMemory do
   end
 
   def get_available_phone_numbers do
-    [%{phone_number: get_default_sms_number()}]
+    [%{"phone_number" => get_default_sms_number()}]
   end
 
   def provision_phone_number(phone_number) do
@@ -46,7 +46,7 @@ defmodule Quilt.Sms.TwilioInMemory do
           message: message,
           media_urls: media_urls,
           from_number: from_number,
-          to_number: from_number
+          to_number: to_number
         }
         | state
       ]

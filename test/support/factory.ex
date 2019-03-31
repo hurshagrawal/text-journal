@@ -16,8 +16,12 @@ defmodule Quilt.Factory do
 
   def journal_factory do
     %Journal{
-      phone_number: sequence(:phone_number, &get_random_phone_number/0),
+      phone_number:
+        sequence(:phone_number, fn _i ->
+          get_random_phone_number()
+        end),
       name: sequence(:name, &"Journal #{&1}"),
+      type: "broadcast",
       onboarding_text: sequence(:onboarding_text, &"Onboarding text #{&1}."),
       subscriber_response_text:
         sequence(:subscriber_response_text, &"Onboarding text #{&1}.")

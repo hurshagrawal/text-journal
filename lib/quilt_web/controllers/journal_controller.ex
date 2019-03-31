@@ -2,7 +2,7 @@ defmodule QuiltWeb.JournalController do
   use QuiltWeb, :controller
   use QuiltWeb.GuardedController
 
-  alias Quilt.{Content, Sms}
+  alias Quilt.Content
 
   plug :ensure_authenticated
 
@@ -31,7 +31,7 @@ defmodule QuiltWeb.JournalController do
 
   def create(conn, %{"name" => name}, current_user) do
     case Content.create_user_journal(current_user, name) do
-      {:ok, journal} ->
+      {:ok, _} ->
         redirect(conn, to: Routes.journal_path(conn, :index))
 
       {:error, error} ->
@@ -41,15 +41,14 @@ defmodule QuiltWeb.JournalController do
     end
   end
 
-  def update(conn, params, current_user) do
+  def update(conn, params, _current_user) do
     attrs = %{
       name: params["name"],
       onboarding_text: params["onboarding_text"],
       subscriber_response_text: params["subscriber_response_text"]
     }
 
-    current_user
-    |> Content.get_user_journal()
+    Content.get_journal(id: params["id"])
     |> Content.update_journal(attrs)
 
     conn
