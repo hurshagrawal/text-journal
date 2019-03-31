@@ -1,6 +1,7 @@
 {
   "environments": {
     "test": {
+      "addons": ["heroku-postgresql:in-dyno"],
       "scripts": {
         "test": "MIX_ENV=test elixir -S mix test --exclude pending"
       }
