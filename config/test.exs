@@ -10,12 +10,19 @@ config :quilt, QuiltWeb.Endpoint,
 config :logger, level: :warn
 
 # Configure your database
-config :quilt, Quilt.Repo,
-  username: "postgres",
-  password: "postgres",
-  database: "quilt_test",
-  hostname: "localhost",
-  pool: Ecto.Adapters.SQL.Sandbox
+if System.get_env("DATABASE_URL") do
+  config :quilt, Quilt.Repo,
+    adapter: Ecto.Adapters.Postgres,
+    url: System.get_env("DATABASE_URL"),
+    pool: Ecto.Adapters.SQL.Sandbox
+else
+  config :quilt, Quilt.Repo,
+    username: "postgres",
+    password: "postgres",
+    database: "quilt_test",
+    hostname: "localhost",
+    pool: Ecto.Adapters.SQL.Sandbox
+end
 
 # Dynamically loaded modules
 config :quilt, :twilio_client, Quilt.Sms.TwilioInMemory
