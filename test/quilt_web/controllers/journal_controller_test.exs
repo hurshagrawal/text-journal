@@ -4,31 +4,31 @@ defmodule QuiltWeb.JournalControllerTest do
   alias QuiltWeb.Guardian.Plug, as: Guardian
 
   describe "get :index" do
+    @tag :pending
     test "renders the create form if the user has no journal", %{conn: conn} do
-      raise "Not yet implemented"
     end
 
+    @tag :pending
     test "renders the journal page if the user has a journal", %{conn: conn} do
-      raise "Not yet implemented"
     end
   end
 
   describe "post :create" do
+    @tag :pending
     test "errors and redirects back if the params are incorrect", %{conn: conn} do
-      raise "Not yet implemented"
     end
 
+    @tag :pending
     test "creates a journal and redirects to the journal page", %{conn: conn} do
       # assert name, onboarding text, response text are right
       # assert journal membership exists
       # assert new_sms_number was called and added to the journal
-      raise "Not yet implemented"
     end
   end
 
   describe "put :update" do
+    @tag :pending
     test "updates the user's journal and redirects back", %{conn: conn} do
-      raise "Not yet implemented"
     end
   end
 end
