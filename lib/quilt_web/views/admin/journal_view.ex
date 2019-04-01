@@ -8,4 +8,16 @@ defmodule QuiltWeb.Admin.JournalView do
       "subscriber"
     end
   end
+
+  def subscribe_post_class(posts, post, journal_owner_id) do
+    author_id = post.user_id
+    first_author_post = Enum.find(posts, &(&1.user_id == author_id))
+
+    if author_id != journal_owner_id && first_author_post &&
+         first_author_post.id == post.id do
+      "faded"
+    else
+      ""
+    end
+  end
 end
