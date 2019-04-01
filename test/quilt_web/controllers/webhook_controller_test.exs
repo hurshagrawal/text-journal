@@ -7,7 +7,7 @@ defmodule QuiltWeb.WebhookControllerTest do
   alias Quilt.Sms.TwilioInMemory
 
   setup do
-    Quilt.Sms.TwilioInMemory.clear()
+    Quilt.Sms.TwilioInMemory.reset()
   end
 
   describe "for a new subscriber" do
@@ -68,8 +68,7 @@ defmodule QuiltWeb.WebhookControllerTest do
       user = insert(:user, phone_number: from_number)
       journal = insert(:journal, phone_number: to_number)
 
-      membership =
-        insert(:journal_membership, type: "owner", user: user, journal: journal)
+      insert(:journal_membership, type: "owner", user: user, journal: journal)
 
       subscriber_membership_1 =
         insert(:journal_membership, type: "subscriber", journal: journal)
@@ -119,6 +118,45 @@ defmodule QuiltWeb.WebhookControllerTest do
       assert sms.media_urls == [media_url]
       assert sms.from_number == to_number
       assert sms.to_number == subscriber_membership_2.user.phone_number
+    end
+
+    test "unsubscribed users where Twilio has blacklisted them", %{conn: conn} do
+      from_number = "+12125791255"
+      to_number = "+12125791333"
+
+      user = insert(:user, phone_number: from_number)
+      journal = insert(:journal, phone_number: to_number)
+      insert(:journal_membership, type: "owner", user: user, journal: journal)
+
+      membership =
+        insert(:journal_membership,
+          type: "subscriber",
+          subscribed: true,
+          journal: journal
+        )
+
+      TwilioInMemory.force_error_responses()
+
+      conn =
+        post(conn, Routes.webhook_path(conn, :run),
+          Body: "Foo bar baz",
+          From: from_number,
+          To: to_number,
+          NumMedia: "0"
+        )
+
+      assert response(conn, 200) == ""
+
+      # Fans out the sms
+      texts_sent = TwilioInMemory.requests()
+      assert length(texts_sent) == 1
+
+      sms = Enum.at(texts_sent, 0)
+      assert sms.from_number == to_number
+      assert sms.to_number == membership.user.phone_number
+
+      membership = Repo.get(JournalMembership, membership.id)
+      assert membership.subscribed == false
     end
   end
 
@@ -191,13 +229,12 @@ defmodule QuiltWeb.WebhookControllerTest do
           subscriber_response_text: subscriber_response_text
         )
 
-      membership =
-        insert(:journal_membership,
-          type: "subscriber",
-          subscribed: true,
-          user: user,
-          journal: journal
-        )
+      insert(:journal_membership,
+        type: "subscriber",
+        subscribed: true,
+        user: user,
+        journal: journal
+      )
 
       conn =
         post(conn, Routes.webhook_path(conn, :run),

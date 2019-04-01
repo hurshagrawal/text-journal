@@ -38,7 +38,7 @@ defmodule Quilt.Sms do
     end)
   end
 
-  def fan_out_sms(body, media_urls \\ [], to_numbers, from_number) do
+  def fan_out_sms(to_numbers, body, media_urls \\ [], from_number) do
     has_body = body |> String.trim() |> String.length() > 0
     has_media = Enum.count(media_urls) > 0
 
@@ -52,9 +52,13 @@ defmodule Quilt.Sms do
       IO.puts("Body: #{inspect(body)}")
       IO.puts("Media Urls: #{inspect(media_urls)}")
 
-      Enum.map(to_numbers, fn to_number ->
+      to_numbers
+      |> Enum.map(fn to_number ->
         send_mms(body, media_urls, to_number, from_number)
       end)
+      |> Enum.map(&Task.await/1)
+    else
+      []
     end
   end
 end

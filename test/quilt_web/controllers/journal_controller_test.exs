@@ -2,7 +2,7 @@ defmodule QuiltWeb.JournalControllerTest do
   use QuiltWeb.ConnCase
 
   alias Quilt.Repo
-  alias Quilt.Content.{Journal, JournalMembership, Post}
+  alias Quilt.Content.{Journal, JournalMembership}
   alias QuiltWeb.Guardian.Plug, as: Guardian
 
   setup %{conn: conn} do

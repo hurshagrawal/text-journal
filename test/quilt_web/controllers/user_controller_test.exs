@@ -9,7 +9,7 @@ defmodule QuiltWeb.UserControllerTest do
   alias QuiltWeb.Guardian.Plug, as: Guardian
 
   setup do
-    Quilt.Sms.TwilioInMemory.clear()
+    Quilt.Sms.TwilioInMemory.reset()
   end
 
   describe "get :index" do

@@ -57,10 +57,26 @@ defmodule QuiltWeb.WebhookController do
             case membership.type do
               # If this message is from the owner, fan it out to subscribers
               "owner" ->
-                subscriber_numbers =
-                  Content.get_subscriber_phone_numbers(journal)
+                phone_numbers =
+                  journal
+                  |> Content.get_subscriber_phone_numbers()
 
-                Sms.fan_out_sms(body, media_urls, subscriber_numbers, to_number)
+                phone_numbers
+                |> Sms.fan_out_sms(body, media_urls, to_number)
+                |> Enum.with_index()
+                |> Enum.each(fn {response, i} ->
+                  case response do
+                    # The phone number has been blacklisted by Twilio. We should
+                    # unsubscribe the membership so it matches up with Twilio's status
+                    {:error, %{"code" => 21_610}} ->
+                      phone_numbers
+                      |> Enum.at(i)
+                      |> Content.unsubscribe_phone_number(journal)
+
+                    _ ->
+                      nil
+                  end
+                end)
 
               "subscriber" ->
                 case membership.subscribed do

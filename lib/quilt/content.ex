@@ -4,7 +4,7 @@ defmodule Quilt.Content do
 
   alias Ecto.Multi
 
-  alias Quilt.{Repo, Sms}
+  alias Quilt.{Repo, Sms, Accounts}
   alias Quilt.Accounts.User
   alias Quilt.Content.Journal
   alias Quilt.Content.Post
@@ -167,6 +167,15 @@ defmodule Quilt.Content do
       subscribed: true
     })
     |> Repo.insert_or_update!()
+  end
+
+  def unsubscribe_phone_number(phone_number, journal) do
+    user = Accounts.get_user(phone_number: phone_number)
+
+    case get_membership(journal_id: journal.id, user_id: user.id) do
+      nil -> {:ok, nil}
+      membership -> unsubscribe_membership(membership)
+    end
   end
 
   def unsubscribe_membership(membership) do
