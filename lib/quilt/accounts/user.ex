@@ -6,6 +6,7 @@ defmodule Quilt.Accounts.User do
     field :name, :string
     field :phone_number, :string
     field :verification_code, :integer
+    field :is_us_number, :boolean
 
     has_many :journal_memberships, Quilt.Content.JournalMembership
     has_many :journals, through: [:journal_memberships, :journal]
@@ -24,10 +25,12 @@ defmodule Quilt.Accounts.User do
     |> cast(attrs, [
       :name,
       :verification_code,
-      :phone_number
+      :phone_number,
+      :is_us_number
     ])
     |> sanitize_name()
     |> sanitize_phone_number()
+    |> set_if_us_phone_number()
     |> validate_required([:phone_number])
     |> unique_constraint(:phone_number)
   end
@@ -46,6 +49,11 @@ defmodule Quilt.Accounts.User do
     ExPhoneNumber.format(phone_number, :e164)
   end
 
+  def is_us_phone_number?(raw_phone_string) do
+    {:ok, phone_number} = ExPhoneNumber.parse(raw_phone_string, "US")
+    phone_number.country_code == 1
+  end
+
   defp sanitize_name(%Ecto.Changeset{} = changeset) do
     update_change(changeset, :name, &String.trim/1)
   end
@@ -62,6 +70,16 @@ defmodule Quilt.Accounts.User do
 
       true ->
         add_error(changeset, :phone_number, "is invalid")
+    end
+  end
+
+  defp set_if_us_phone_number(%Ecto.Changeset{} = changeset) do
+    case get_change(changeset, :phone_number) do
+      nil ->
+        changeset
+
+      phone_number ->
+        change(changeset, is_us_number: is_us_phone_number?(phone_number))
     end
   end
 end
