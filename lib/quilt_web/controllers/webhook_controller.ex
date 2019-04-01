@@ -3,6 +3,8 @@ defmodule QuiltWeb.WebhookController do
 
   alias Quilt.{Accounts, Content, Sms}
 
+  @twilio_blacklist_error_code 21_610
+
   @doc """
   Incoming webhook from Twilio when someone sends an
   SMS to a connected phone number.
@@ -68,7 +70,7 @@ defmodule QuiltWeb.WebhookController do
                   case response do
                     # The phone number has been blacklisted by Twilio. We should
                     # unsubscribe the membership so it matches up with Twilio's status
-                    {:error, %{"code" => 21_610}} ->
+                    {:error, %{"code" => @twilio_blacklist_error_code}} ->
                       phone_numbers
                       |> Enum.at(i)
                       |> Content.unsubscribe_phone_number(journal)
@@ -78,11 +80,16 @@ defmodule QuiltWeb.WebhookController do
                   end
                 end)
 
+              # If the message is from a subscriber, figure out how to respond
               "subscriber" ->
-                case membership.subscribed do
-                  # If this message is from an unsubscribed subscriber,
-                  # resubscribe him and send him a welcome-back SMS
-                  false ->
+                cond do
+                  !membership.subscribed && is_stop_post ->
+                    # Already unsubscribed with another stop post. Do nothing.
+                    nil
+
+                  !membership.subscribed ->
+                    # If this message is from an unsubscribed subscriber,
+                    # resubscribe him and send him a welcome-back SMS
                     Content.subscribe_user(journal, user)
 
                     Quilt.Sms.send_sms(
@@ -91,19 +98,18 @@ defmodule QuiltWeb.WebhookController do
                       to_number
                     )
 
+                  is_stop_post ->
+                    # If this subscriber messaged "stop", unsubscribe them
+                    Content.unsubscribe_membership(membership)
+
                   true ->
-                    if is_stop_post do
-                      # If this subscriber messaged "stop", unsubscribe them
-                      Content.unsubscribe_membership(membership)
-                    else
-                      # If this message is from a subscribed subscriber, send a
-                      # text acknowledging receipt of the message
-                      Quilt.Sms.send_sms(
-                        journal.subscriber_response_text,
-                        from_number,
-                        to_number
-                      )
-                    end
+                    # If this message is from a subscribed subscriber, send a
+                    # text acknowledging receipt of the message
+                    Quilt.Sms.send_sms(
+                      journal.subscriber_response_text,
+                      from_number,
+                      to_number
+                    )
                 end
             end
         end

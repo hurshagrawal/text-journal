@@ -262,7 +262,7 @@ defmodule QuiltWeb.WebhookControllerTest do
   end
 
   describe "for an sms that sends 'stop'" do
-    test "unsubscribes the user", %{conn: conn} do
+    def run_stop_request(conn, subscribed) do
       sms_body = "stop"
       from_number = "+12125791255"
       to_number = "+12125791333"
@@ -273,7 +273,7 @@ defmodule QuiltWeb.WebhookControllerTest do
       membership =
         insert(:journal_membership,
           type: "subscriber",
-          subscribed: true,
+          subscribed: subscribed,
           user: user,
           journal: journal
         )
@@ -286,6 +286,16 @@ defmodule QuiltWeb.WebhookControllerTest do
           NumMedia: "0"
         )
 
+      %{conn: conn, user: user, membership: membership}
+    end
+
+    test "unsubscribes the user", %{conn: conn} do
+      %{
+        conn: conn,
+        user: user,
+        membership: membership
+      } = run_stop_request(conn, true)
+
       assert response(conn, 200) == ""
 
       # post is NOT created
@@ -293,6 +303,24 @@ defmodule QuiltWeb.WebhookControllerTest do
       assert post == nil
 
       # membership is updated properly
+      membership = Repo.get_by(JournalMembership, id: membership.id)
+      assert membership.subscribed == false
+    end
+
+    test "doesn't resubscribe the user if they're unsubscribed", %{conn: conn} do
+      %{
+        conn: conn,
+        user: user,
+        membership: membership
+      } = run_stop_request(conn, false)
+
+      assert response(conn, 200) == ""
+
+      # post is NOT created
+      post = Repo.get_by(Post, user_id: user.id)
+      assert post == nil
+
+      # membership is still unsubscribed false
       membership = Repo.get_by(JournalMembership, id: membership.id)
       assert membership.subscribed == false
     end
