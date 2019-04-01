@@ -2,7 +2,7 @@ defmodule Quilt.Sms.TwilioDev do
   alias Quilt.Sms.Twilio
 
   def get_available_phone_numbers do
-    [%{phone_number: get_default_sms_number()}]
+    [%{"phone_number" => get_default_sms_number()}]
   end
 
   def provision_phone_number(phone_number) do

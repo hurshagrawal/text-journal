@@ -48,8 +48,9 @@ defmodule Quilt.Sms.Twilio do
     IO.puts("Twilio: Sending SMS to #{to_number}")
 
     case send_message(request_body) do
-      {:ok, _} ->
+      {:ok, body} ->
         IO.puts("Twilio: SMS sent successfully to #{to_number}")
+        {:ok, body}
 
       {:error, response_body} ->
         IO.puts(
@@ -57,6 +58,8 @@ defmodule Quilt.Sms.Twilio do
             inspect(response_body)
           }"
         )
+
+        {:error, response_body}
     end
   end
 
@@ -83,8 +86,11 @@ defmodule Quilt.Sms.Twilio do
           }"
         )
 
+        {:ok, body}
+
       {:error, body} ->
         IO.puts("Twilio: MMS error to #{to_number} with body- #{inspect(body)}")
+        {:error, body}
     end
   end
 
