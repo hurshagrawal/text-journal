@@ -47,4 +47,15 @@ defmodule QuiltWeb.Controllers.Helpers do
       _ -> redirect(conn, to: Routes.user_path(conn, :index))
     end
   end
+
+  def redirect_to_back(conn) do
+    path =
+      conn
+      |> Plug.Conn.get_req_header("referer")
+      |> List.first()
+      |> URI.parse()
+      |> Map.get(:path)
+
+    redirect(conn, to: path)
+  end
 end

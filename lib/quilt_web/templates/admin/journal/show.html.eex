@@ -33,24 +33,37 @@
       </div>
     </div>
 
-    <div class="card--section--item">
-      <div class="card--section--item-label">
-        <b>To New Subscribers...</b>
-      </div>
-      <div class="card--section--item-box uneditable">
-        <%= @journal.onboarding_text %>
-      </div>
-    </div>
-
-    <div class="card--section--item">
-      <div class="card--section--item-label">
-        <b>When a Follower Responds...</b>
+    <%= form_for @conn, Routes.journal_path(@conn, :update, @journal.id), [method: :put], fn f -> %>
+      <div class="card--section--item">
+        <div class="card--section--item-label">
+          <b>Name</b>
+        </div>
+        <div class="card--section--item-box">
+          <%= text_input f, :name, value: @journal.name %>
+        </div>
       </div>
 
-      <div class="card--section--item-box uneditable">
-        <%= @journal.subscriber_response_text %>
+      <div class="card--section--item">
+        <div class="card--section--item-label">
+          <b>To New Subscribers...</b>
+        </div>
+        <div class="card--section--item-box">
+          <%= textarea f, :onboarding_text, value: @journal.onboarding_text %>
+        </div>
       </div>
-    </div>
+
+      <div class="card--section--item">
+        <div class="card--section--item-label">
+          <b>When a Follower Responds...</b>
+        </div>
+
+        <div class="card--section--item-box">
+          <%= textarea f, :subscriber_response_text, value: @journal.subscriber_response_text %>
+        </div>
+      </div>
+
+      <%= submit "Update fields", class: "card--button" %>
+    <% end %>
 
     <div class="card--section--item">
       <div class="card--section--item-label">

@@ -53,6 +53,6 @@ defmodule QuiltWeb.JournalController do
 
     conn
     |> put_flash(:info, "Saved")
-    |> redirect(to: Routes.journal_path(conn, :index))
+    |> redirect_to_back()
   end
 end

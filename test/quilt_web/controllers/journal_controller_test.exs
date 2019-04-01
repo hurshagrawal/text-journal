@@ -5,6 +5,13 @@ defmodule QuiltWeb.JournalControllerTest do
   alias Quilt.Content.{Journal, JournalMembership, Post}
   alias QuiltWeb.Guardian.Plug, as: Guardian
 
+  setup %{conn: conn} do
+    # Ensure referer is set so redirect_to_back works properly
+    conn = put_req_header(conn, "referer", "https://www.example.com/journal")
+
+    %{conn: conn}
+  end
+
   describe "get :index" do
     test "renders the create form if the user has no journal", %{conn: conn} do
       user = insert(:user)
