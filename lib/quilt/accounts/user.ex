@@ -6,8 +6,6 @@ defmodule Quilt.Accounts.User do
     field :name, :string
     field :phone_number, :string
     field :verification_code, :integer
-    field :verification_code_expires_at, :naive_datetime
-    field :last_login_at, :naive_datetime
 
     has_many :journal_memberships, Quilt.Content.JournalMembership
     has_many :journals, through: [:journal_memberships, :journal]
@@ -26,9 +24,7 @@ defmodule Quilt.Accounts.User do
     |> cast(attrs, [
       :name,
       :verification_code,
-      :verification_code_expires_at,
-      :phone_number,
-      :last_login_at
+      :phone_number
     ])
     |> sanitize_name()
     |> sanitize_phone_number()
