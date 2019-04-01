@@ -81,3 +81,4 @@ config :quilt,
 
 # Dynamically loaded modules
 config :quilt, :twilio_client, Quilt.Sms.Twilio
+config :quilt, :admin_user_ids, [1, 2, 8]

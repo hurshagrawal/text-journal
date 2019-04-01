@@ -40,4 +40,8 @@ defmodule Quilt.Content.JournalMembership do
   def subscribed(query) do
     from jm in query, where: jm.subscribed == true
   end
+
+  def unsubscribed(query) do
+    from jm in query, where: jm.subscribed == false
+  end
 end

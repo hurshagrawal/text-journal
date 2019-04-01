@@ -63,6 +63,15 @@ defmodule Quilt.Content do
     journal
     |> Ecto.assoc(:journal_memberships)
     |> JournalMembership.without_owner()
+    |> JournalMembership.subscribed()
+    |> Repo.aggregate(:count, :id)
+  end
+
+  def get_journal_unsubscribed_count(journal) do
+    journal
+    |> Ecto.assoc(:journal_memberships)
+    |> JournalMembership.without_owner()
+    |> JournalMembership.unsubscribed()
     |> Repo.aggregate(:count, :id)
   end
 

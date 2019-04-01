@@ -1,0 +1,32 @@
+<div class="card--section--item">
+  <div class="card--section--item-label">
+    <b>Number:</b> Text your updates to this number!
+  </div>
+  <div class="card--section--item-box uneditable">
+    <%= @journal.phone_number %>
+  </div>
+</div>
+
+<div class="card--section--item">
+  <div class="card--section--item-label">
+    <b>Stats</b>
+  </div>
+  <div class="card--section--item-box uneditable">
+    <div class="card--section--item-box--column">
+      <div><b><%= subscriber_count(@journal) %></b></div>
+      <div>Subscribers</div>
+    </div>
+    <div class="card--section--item-box--column">
+      <div><b><%= unsubscribed_count(@journal) %></b></div>
+      <div>Unsubscribed</div>
+    </div>
+    <div class="card--section--item-box--column">
+      <div><b><%= posts_count(@journal) %></b></div>
+      <div>Posts</div>
+    </div>
+    <div class="card--section--item-box--column">
+      <div><b><%= replies_count(@journal) %></b></div>
+      <div>Replies</div>
+    </div>
+  </div>
+</div>

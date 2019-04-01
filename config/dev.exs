@@ -76,6 +76,7 @@ config :quilt, Quilt.Repo,
 
 # Dynamically loaded modules
 config :quilt, :twilio_client, Quilt.Sms.TwilioDev
+config :quilt, :admin_user_ids, Enum.to_list(0..99)
 
 # Finally import the config/dev.secret.exs which should be versioned
 # separately.

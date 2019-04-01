@@ -45,20 +45,14 @@ defmodule QuiltWeb.Admin.JournalController do
 
       journal ->
         journal_owner_id = Content.get_journal_owner_id(journal)
-        subscriber_count = Content.get_journal_subscribers_count(journal)
         posts = Content.get_journal_posts(journal)
-        posts_count = Content.get_journal_owner_posts_count(journal)
-        replies_count = Content.get_journal_replies_count(journal)
 
         render(conn, "show.html",
           current_user: current_user,
           title: "Admin",
           journal: journal,
           journal_owner_id: journal_owner_id,
-          subscriber_count: subscriber_count,
-          posts: posts,
-          posts_count: posts_count,
-          replies_count: replies_count
+          posts: posts
         )
     end
   end

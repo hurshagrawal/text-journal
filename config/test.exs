@@ -26,3 +26,4 @@ end
 
 # Dynamically loaded modules
 config :quilt, :twilio_client, Quilt.Sms.TwilioInMemory
+config :quilt, :admin_user_ids, [1]

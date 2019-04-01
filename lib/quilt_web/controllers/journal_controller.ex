@@ -8,18 +8,11 @@ defmodule QuiltWeb.JournalController do
 
   def index(conn, _params, current_user) do
     if journal = Content.get_user_journal(current_user) do
-      subscriber_count = Content.get_journal_subscribers_count(journal)
-      posts_count = Content.get_journal_owner_posts_count(journal)
-      replies_count = Content.get_journal_replies_count(journal)
-
       render(conn, "index.html",
         title: "Journal Settings",
         current_user: current_user,
         show_sign_out: true,
-        journal: journal,
-        subscriber_count: subscriber_count,
-        posts_count: posts_count,
-        replies_count: replies_count
+        journal: journal
       )
     else
       render(conn, "index.html",

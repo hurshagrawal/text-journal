@@ -5,7 +5,7 @@ defmodule QuiltWeb.Controllers.Helpers do
   alias QuiltWeb.Guardian.Plug, as: Guardian
   alias QuiltWeb.Router.Helpers, as: Routes
 
-  @admin_user_ids [1, 2, 8]
+  @admin_user_ids Application.get_env(:quilt, :admin_user_ids)
 
   def get_current_user(conn) do
     Guardian.current_resource(conn)

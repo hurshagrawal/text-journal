@@ -4,34 +4,7 @@
       <%= @journal.name %>
     </div>
 
-    <div class="card--section--item">
-      <div class="card--section--item-label">
-        <b>Number</b>
-      </div>
-      <div class="card--section--item-box uneditable">
-        <%= @journal.phone_number %>
-      </div>
-    </div>
-
-    <div class="card--section--item">
-      <div class="card--section--item-label">
-        <b>Stats</b>
-      </div>
-      <div class="card--section--item-box uneditable">
-        <div class="card--section--item-box--column">
-          <div><b><%= @subscriber_count %></b></div>
-          <div>Subscribers</div>
-        </div>
-        <div class="card--section--item-box--column">
-          <div><b><%= @posts_count %></b></div>
-          <div>Posts</div>
-        </div>
-        <div class="card--section--item-box--column">
-          <div><b><%= @replies_count %></b></div>
-          <div>Replies</div>
-        </div>
-      </div>
-    </div>
+    <%= render QuiltWeb.SharedView, "_journal_stats.html", assigns %>
 
     <%= form_for @conn, Routes.journal_path(@conn, :update, @journal.id), [method: :put], fn f -> %>
       <div class="card--section--item">
