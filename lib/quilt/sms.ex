@@ -60,13 +60,13 @@ defmodule Quilt.Sms do
           # We can't send MMS to international numbers, so send media URLs as sms
           []
           |> prepend_if_true(has_body, fn ->
-            send_sms(body, to_number, from_number)
+            [send_sms(body, to_number, from_number)]
           end)
           |> prepend_if_true(
             has_media,
             fn ->
               Enum.map(media_urls, fn url ->
-                send_sms(url, to_number, from_number)
+                send_sms("Attached media: #{url}", to_number, from_number)
               end)
             end
           )

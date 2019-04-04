@@ -37,7 +37,6 @@ defmodule QuiltWeb.WebhookControllerTest do
       # user is created properly
       user = Repo.get_by(User, phone_number: from_number)
       assert user != nil
-      assert user.is_us_number == true
 
       # post is created properly
       post = Repo.get_by(Post, user_id: user.id)
@@ -56,29 +55,6 @@ defmodule QuiltWeb.WebhookControllerTest do
       sms = List.first(texts_sent)
       assert sms.message == journal.onboarding_text
       assert sms.to_number == from_number
-    end
-
-    test "correctly sets whether the number is a US number", %{conn: conn} do
-      from_number = "+44 (0)20 8977 3252"
-      to_number = "+12125791333"
-
-      journal = insert(:journal, phone_number: to_number)
-
-      conn =
-        post(conn, Routes.webhook_path(conn, :run),
-          Body: "Test body",
-          From: from_number,
-          To: to_number,
-          NumMedia: "0"
-        )
-
-      assert response(conn, 200) == ""
-
-      user =
-        Repo.get_by(User, phone_number: User.normalize_phone_number(from_number))
-
-      assert user != nil
-      assert user.is_us_number == false
     end
   end
 
@@ -224,6 +200,7 @@ defmodule QuiltWeb.WebhookControllerTest do
     test "sends a link to images for international numbers", %{conn: conn} do
       from_number = "+12125791255"
       to_number = "+12125791333"
+      body = "Hi there this is body"
       media_url = "http://www.example.com/cat.jpg"
 
       user = insert(:user, phone_number: from_number)
@@ -242,7 +219,7 @@ defmodule QuiltWeb.WebhookControllerTest do
 
       conn =
         post(conn, Routes.webhook_path(conn, :run),
-          Body: "",
+          Body: body,
           From: from_number,
           To: to_number,
           NumMedia: "1",
@@ -253,12 +230,18 @@ defmodule QuiltWeb.WebhookControllerTest do
 
       # Fans out the sms
       texts_sent = TwilioInMemory.requests()
-      assert length(texts_sent) == 1
+      assert length(texts_sent) == 2
 
       sms = Enum.at(texts_sent, 0)
       assert sms.from_number == to_number
       assert sms.to_number == membership.user.phone_number
-      assert sms.message == media_url
+      assert sms.message == "Attached media: #{media_url}"
+      assert sms.media_urls == []
+
+      sms = Enum.at(texts_sent, 1)
+      assert sms.from_number == to_number
+      assert sms.to_number == membership.user.phone_number
+      assert sms.message == body
       assert sms.media_urls == []
     end
   end

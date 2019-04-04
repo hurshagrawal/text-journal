@@ -129,7 +129,7 @@ defmodule QuiltWeb.UserControllerTest do
         |> init_test_session(user_to_verify_id: user.id)
         |> post(Routes.user_path(conn, :verify_user, code: verification_code))
 
-      assert Guardian.current_resource(conn).id == user.id
+      assert Guardian.current_resource(conn) == user
       assert redirected_to(conn) == Routes.user_path(conn, :index)
     end
   end
