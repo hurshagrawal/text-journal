@@ -144,7 +144,7 @@ defmodule QuiltWeb.WebhookControllerTest do
       assert sms.to_number == subscriber_membership_2.user.phone_number
     end
 
-    test "unsubscribed users where Twilio has blacklisted them", %{conn: conn} do
+    test "unsubscribes users where Twilio has blacklisted them", %{conn: conn} do
       from_number = "+12125791255"
       to_number = "+12125791333"
 
@@ -181,6 +181,85 @@ defmodule QuiltWeb.WebhookControllerTest do
 
       membership = Repo.get(JournalMembership, membership.id)
       assert membership.subscribed == false
+    end
+
+    test "sends media urls properly", %{conn: conn} do
+      from_number = "+12125791255"
+      to_number = "+12125791333"
+      media_url = "http://www.example.com/cat.jpg"
+
+      user = insert(:user, phone_number: from_number)
+      journal = insert(:journal, phone_number: to_number)
+      insert(:journal_membership, type: "owner", user: user, journal: journal)
+
+      membership =
+        insert(:journal_membership,
+          type: "subscriber",
+          subscribed: true,
+          journal: journal
+        )
+
+      conn =
+        post(conn, Routes.webhook_path(conn, :run),
+          Body: "",
+          From: from_number,
+          To: to_number,
+          NumMedia: "1",
+          MediaUrl0: media_url
+        )
+
+      assert response(conn, 200) == ""
+
+      # Fans out the sms
+      texts_sent = TwilioInMemory.requests()
+      assert length(texts_sent) == 1
+
+      sms = Enum.at(texts_sent, 0)
+      assert sms.from_number == to_number
+      assert sms.to_number == membership.user.phone_number
+      assert sms.message == ""
+      assert sms.media_urls == [media_url]
+    end
+
+    test "sends a link to images for international numbers", %{conn: conn} do
+      from_number = "+12125791255"
+      to_number = "+12125791333"
+      media_url = "http://www.example.com/cat.jpg"
+
+      user = insert(:user, phone_number: from_number)
+      journal = insert(:journal, phone_number: to_number)
+      insert(:journal_membership, type: "owner", user: user, journal: journal)
+
+      subscriber_user = insert(:user, phone_number: "+44 (0)20 8977 3252")
+
+      membership =
+        insert(:journal_membership,
+          type: "subscriber",
+          subscribed: true,
+          journal: journal,
+          user: subscriber_user
+        )
+
+      conn =
+        post(conn, Routes.webhook_path(conn, :run),
+          Body: "",
+          From: from_number,
+          To: to_number,
+          NumMedia: "1",
+          MediaUrl0: media_url
+        )
+
+      assert response(conn, 200) == ""
+
+      # Fans out the sms
+      texts_sent = TwilioInMemory.requests()
+      assert length(texts_sent) == 1
+
+      sms = Enum.at(texts_sent, 0)
+      assert sms.from_number == to_number
+      assert sms.to_number == membership.user.phone_number
+      assert sms.message == media_url
+      assert sms.media_urls == []
     end
   end
 
