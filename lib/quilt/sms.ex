@@ -54,23 +54,18 @@ defmodule Quilt.Sms do
 
       to_numbers
       |> Enum.map(fn to_number ->
-        if is_us_phone_number?(to_number) do
-          send_mms(body, media_urls, to_number, from_number)
-        else
-          # We can't send MMS to international numbers, so send media URLs as sms
-          []
-          |> prepend_if_true(has_body, fn ->
-            [send_sms(body, to_number, from_number)]
-          end)
-          |> prepend_if_true(
-            has_media,
-            fn ->
-              Enum.map(media_urls, fn url ->
-                send_sms("Attached media: #{url}", to_number, from_number)
-              end)
-            end
-          )
-        end
+        []
+        |> prepend_if_true(has_body, fn ->
+          [send_sms(body, to_number, from_number)]
+        end)
+        |> prepend_if_true(
+          has_media,
+          fn ->
+            Enum.map(media_urls, fn url ->
+              send_sms("Attached media: #{url}", to_number, from_number)
+            end)
+          end
+        )
       end)
       |> List.flatten()
       |> Enum.map(&Task.await/1)
@@ -81,10 +76,5 @@ defmodule Quilt.Sms do
 
   defp prepend_if_true(list, condition, clause) do
     if condition, do: clause.() ++ list, else: list
-  end
-
-  defp is_us_phone_number?(raw_phone_string) do
-    {:ok, phone_number} = ExPhoneNumber.parse(raw_phone_string, "US")
-    phone_number.country_code == 1
   end
 end
