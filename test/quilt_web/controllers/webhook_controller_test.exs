@@ -105,25 +105,17 @@ defmodule QuiltWeb.WebhookControllerTest do
 
       # Fans out the sms
       texts_sent = TwilioInMemory.requests()
-      assert length(texts_sent) == 4
-
-      sms = Enum.at(texts_sent, 3)
-      assert sms.message == sms_body
-      assert sms.from_number == to_number
-      assert sms.to_number == subscriber_membership_1.user.phone_number
-
-      sms = Enum.at(texts_sent, 2)
-      assert sms.message =~ media_url
-      assert sms.from_number == to_number
-      assert sms.to_number == subscriber_membership_1.user.phone_number
+      assert length(texts_sent) == 2
 
       sms = Enum.at(texts_sent, 1)
       assert sms.message == sms_body
+      assert sms.media_urls == [media_url]
       assert sms.from_number == to_number
-      assert sms.to_number == subscriber_membership_2.user.phone_number
+      assert sms.to_number == subscriber_membership_1.user.phone_number
 
       sms = Enum.at(texts_sent, 0)
-      assert sms.message =~ media_url
+      assert sms.message == sms_body
+      assert sms.media_urls == [media_url]
       assert sms.from_number == to_number
       assert sms.to_number == subscriber_membership_2.user.phone_number
     end
@@ -201,7 +193,8 @@ defmodule QuiltWeb.WebhookControllerTest do
       sms = Enum.at(texts_sent, 0)
       assert sms.from_number == to_number
       assert sms.to_number == membership.user.phone_number
-      assert sms.message =~ media_url
+      assert sms.message == ""
+      assert sms.media_urls == [media_url]
     end
 
     test "sends a link to images for international numbers", %{conn: conn} do
