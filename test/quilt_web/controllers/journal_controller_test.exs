@@ -39,6 +39,22 @@ defmodule QuiltWeb.JournalControllerTest do
     end
   end
 
+  describe "get :show" do
+    test "renders the journal page", %{conn: conn} do
+      journal = insert(:journal)
+      membership = insert(:journal_membership, journal: journal, type: "owner")
+      post_one = insert(:post, journal: journal, user: membership.user)
+      post_two = insert(:post, journal: journal, user: membership.user)
+
+      conn =
+        conn
+        |> get(Routes.journal_path(conn, :show, journal.id))
+
+      assert html_response(conn, 200) =~ post_one.body
+      assert html_response(conn, 200) =~ post_two.body
+    end
+  end
+
   describe "post :create" do
     test "errors and redirects back if the params are incorrect", %{conn: conn} do
       user = insert(:user)

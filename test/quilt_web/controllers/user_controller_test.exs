@@ -13,10 +13,10 @@ defmodule QuiltWeb.UserControllerTest do
   end
 
   describe "get :index" do
-    test "renders the sign up page when unauthenticated", %{conn: conn} do
+    test "renders the sign in page when unauthenticated", %{conn: conn} do
       conn = get(conn, Routes.user_path(conn, :index))
 
-      assert html_response(conn, 200) =~ "Sign up"
+      assert html_response(conn, 200) =~ "Sign in"
     end
 
     test "redirects to journal page when authenticated", %{conn: conn} do
