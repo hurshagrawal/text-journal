@@ -6,6 +6,7 @@ defmodule Quilt.Content.JournalMembership do
   schema "journal_memberships" do
     field :type, :string
     field :subscribed, :boolean
+    field :subscriber_response_sent, :boolean
 
     belongs_to :journal, Quilt.Content.Journal
     belongs_to :user, Quilt.Accounts.User
@@ -16,9 +17,20 @@ defmodule Quilt.Content.JournalMembership do
   @doc false
   def changeset(journal_membership, attrs) do
     journal_membership
-    |> cast(attrs, [:type, :journal_id, :user_id, :subscribed])
+    |> cast(attrs, [
+      :type,
+      :journal_id,
+      :user_id,
+      :subscribed,
+      :subscriber_response_sent
+    ])
     |> set_default_type()
-    |> validate_required([:type, :journal_id, :user_id, :subscribed])
+    |> validate_required([
+      :type,
+      :journal_id,
+      :user_id,
+      :subscribed
+    ])
     |> unique_constraint(:journal_and_user,
       name: :users_journal_id_user_id_index
     )

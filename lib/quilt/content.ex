@@ -188,14 +188,18 @@ defmodule Quilt.Content do
   end
 
   def unsubscribe_membership(membership) do
-    membership
-    |> JournalMembership.changeset(%{subscribed: false})
-    |> Repo.update!()
+    update_membership(membership, %{subscribed: false})
   end
 
   def update_journal(journal, attrs) do
     journal
     |> Journal.changeset(attrs)
+    |> Repo.update!()
+  end
+
+  def update_membership(membership, attrs) do
+    membership
+    |> JournalMembership.changeset(attrs)
     |> Repo.update!()
   end
 

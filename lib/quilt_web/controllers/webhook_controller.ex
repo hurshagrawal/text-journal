@@ -97,24 +97,33 @@ defmodule QuiltWeb.WebhookController do
                     # resubscribe him and send him a welcome-back SMS
                     Content.subscribe_user(journal, user)
 
-                    Quilt.Sms.send_sms(
-                      journal.onboarding_text,
+                    journal.onboarding_text
+                    |> Quilt.Sms.send_sms(
                       from_number,
                       to_number
                     )
+                    |> Task.await()
 
                   is_stop_post ->
                     # If this subscriber messaged "stop", unsubscribe them
                     Content.unsubscribe_membership(membership)
 
-                  true ->
+                  !membership.subscriber_response_sent ->
                     # If this message is from a subscribed subscriber, send a
-                    # text acknowledging receipt of the message
-                    Quilt.Sms.send_sms(
-                      journal.subscriber_response_text,
+                    # text acknowledging receipt of the message once
+                    journal.subscriber_response_text
+                    |> Quilt.Sms.send_sms(
                       from_number,
                       to_number
                     )
+                    |> Task.await()
+
+                    Content.update_membership(membership, %{
+                      subscriber_response_sent: true
+                    })
+
+                  true ->
+                    nil
                 end
             end
         end

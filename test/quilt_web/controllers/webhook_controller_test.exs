@@ -312,7 +312,7 @@ defmodule QuiltWeb.WebhookControllerTest do
   end
 
   describe "for an existing, subscribed subscriber" do
-    test "sends a response sms", %{conn: conn} do
+    test "sends a response sms once", %{conn: conn} do
       sms_body = "Yo here's a response"
       from_number = "+12125791255"
       to_number = "+12125791333"
@@ -356,6 +356,19 @@ defmodule QuiltWeb.WebhookControllerTest do
       sms = List.first(texts_sent)
       assert sms.message == journal.subscriber_response_text
       assert sms.to_number == from_number
+
+      # The response text should only be sent once
+      conn =
+        conn
+        |> recycle()
+        |> post(Routes.webhook_path(conn, :run),
+          Body: "Here's another response",
+          From: from_number,
+          To: to_number,
+          NumMedia: "0"
+        )
+
+      assert length(Twilio.requests()) == 1
     end
   end
 
