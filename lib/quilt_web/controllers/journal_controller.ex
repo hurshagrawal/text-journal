@@ -4,7 +4,7 @@ defmodule QuiltWeb.JournalController do
 
   alias Quilt.Content
 
-  plug :ensure_authenticated
+  plug :ensure_authenticated when action in [:index, :create, :update]
 
   def index(conn, _params, current_user) do
     if journal = Content.get_user_journal(current_user) do
@@ -19,6 +19,28 @@ defmodule QuiltWeb.JournalController do
         journal: nil,
         current_user: current_user
       )
+    end
+  end
+
+  def show(conn, %{"journal_id" => journal_id}, _current_user) do
+    case Content.get_journal(id: journal_id) do
+      nil ->
+        redirect(conn, to: Routes.user_path(conn, :index))
+
+      journal ->
+        journal_owner_id = Content.get_journal_owner_id(journal)
+
+        posts =
+          journal
+          |> Content.get_journal_posts()
+          |> Enum.filter(fn post ->
+            post.user_id == journal_owner_id
+          end)
+
+        render(conn, "show.html",
+          journal: journal,
+          posts: posts
+        )
     end
   end
 

@@ -1,0 +1,35 @@
+<div class="content-card">
+  <div class="card--section">
+    <div class="card--section--title">
+      <%= @journal.name %>
+    </div>
+
+    <div class="card--section--item">
+      <div class="post-list">
+        <%= for post <- @posts do %>
+          <div class="post-list--post owner">
+            <div class="post-list--post--metadata">
+              <b><%= post.user.name %></b>
+              <span class="post-list--post--metadata--time">
+                <%= Timex.from_now(post.inserted_at) %>
+              </span>
+            </div>
+
+            <%= if post.body do %>
+              <div class="post-list--post--body">
+                <%= post.body %>
+              </div>
+            <% end %>
+
+            <%= for url <- (post.media_urls || []) do %>
+              <div class="post-list--post--body">
+                <a href="<%= url %>" target="_blank">Media Attachment &#8594;</a>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+

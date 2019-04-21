@@ -37,6 +37,7 @@ defmodule QuiltWeb.Router do
     post "/users/verify", UserController, :verify_user
 
     get "/journal", JournalController, :index
+    get "/journal/:journal_id", JournalController, :show
     post "/journal", JournalController, :create
     put "/journal/:id", JournalController, :update
 
