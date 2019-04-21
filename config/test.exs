@@ -25,5 +25,6 @@ else
 end
 
 # Dynamically loaded modules
-config :quilt, :twilio_client, Quilt.Sms.TwilioInMemory
+config :quilt, :twilio_client, Quilt.Sms.Twilio.InMemory
+config :quilt, :images_client, Quilt.Images.InMemory
 config :quilt, :admin_user_ids, [1]

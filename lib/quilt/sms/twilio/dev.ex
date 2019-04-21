@@ -1,5 +1,5 @@
-defmodule Quilt.Sms.TwilioDev do
-  alias Quilt.Sms.Twilio
+defmodule Quilt.Sms.Twilio.Dev do
+  alias Quilt.Sms.Twilio.Client
 
   def get_available_phone_numbers do
     [%{"phone_number" => get_default_sms_number()}]
@@ -13,6 +13,6 @@ defmodule Quilt.Sms.TwilioDev do
     System.get_env("DEFAULT_PHONE_NUMBER") || "+12407433481"
   end
 
-  defdelegate send_sms(message, to_number, from_number), to: Twilio
-  defdelegate send_mms(message, media_urls, to_number, from_number), to: Twilio
+  defdelegate send_sms(message, to_number, from_number), to: Client
+  defdelegate send_mms(message, media_urls, to_number, from_number), to: Client
 end

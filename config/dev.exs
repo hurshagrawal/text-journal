@@ -75,7 +75,8 @@ config :quilt, Quilt.Repo,
   pool_size: 10
 
 # Dynamically loaded modules
-config :quilt, :twilio_client, Quilt.Sms.TwilioDev
+config :quilt, :twilio_client, Quilt.Sms.Twilio.Dev
+config :quilt, :images_client, Quilt.Images.Client
 config :quilt, :admin_user_ids, Enum.to_list(0..99)
 
 # Finally import the config/dev.secret.exs which should be versioned

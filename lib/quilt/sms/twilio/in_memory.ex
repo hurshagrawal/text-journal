@@ -1,4 +1,4 @@
-defmodule Quilt.Sms.TwilioInMemory do
+defmodule Quilt.Sms.Twilio.InMemory do
   @default_state %{
     force_error_responses: false,
     requests: []

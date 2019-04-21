@@ -79,7 +79,7 @@ defmodule QuiltWeb.JournalControllerTest do
       assert journal.subscriber_response_text =~ "Thanks for the message!"
 
       assert journal.phone_number ==
-               Quilt.Sms.TwilioInMemory.get_default_sms_number()
+               Quilt.Sms.Twilio.InMemory.get_default_sms_number()
     end
   end
 

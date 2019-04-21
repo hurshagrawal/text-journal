@@ -4,10 +4,10 @@ defmodule QuiltWeb.WebhookControllerTest do
   alias Quilt.Repo
   alias Quilt.Content.{Post, JournalMembership}
   alias Quilt.Accounts.User
-  alias Quilt.Sms.TwilioInMemory
+  alias Quilt.Sms.Twilio.InMemory, as: Twilio
 
   setup do
-    Quilt.Sms.TwilioInMemory.reset()
+    Twilio.reset()
   end
 
   describe "for a new subscriber" do
@@ -49,7 +49,7 @@ defmodule QuiltWeb.WebhookControllerTest do
       assert membership.type == "subscriber"
 
       # Sends a welcome sms
-      texts_sent = TwilioInMemory.requests()
+      texts_sent = Twilio.requests()
       assert length(texts_sent) == 1
 
       sms = List.first(texts_sent)
@@ -104,18 +104,30 @@ defmodule QuiltWeb.WebhookControllerTest do
       assert post.journal_id == journal.id
 
       # Fans out the sms
-      texts_sent = TwilioInMemory.requests()
-      assert length(texts_sent) == 2
+      texts_sent = Twilio.requests()
+      assert length(texts_sent) == 4
 
-      sms = Enum.at(texts_sent, 1)
+      sms = Enum.at(texts_sent, 3)
       assert sms.message == sms_body
-      assert sms.media_urls == [media_url]
+      assert sms.media_urls == []
       assert sms.from_number == to_number
       assert sms.to_number == subscriber_membership_1.user.phone_number
 
-      sms = Enum.at(texts_sent, 0)
+      sms = Enum.at(texts_sent, 2)
+      assert sms.message == media_url
+      assert sms.media_urls == []
+      assert sms.from_number == to_number
+      assert sms.to_number == subscriber_membership_1.user.phone_number
+
+      sms = Enum.at(texts_sent, 1)
       assert sms.message == sms_body
-      assert sms.media_urls == [media_url]
+      assert sms.media_urls == []
+      assert sms.from_number == to_number
+      assert sms.to_number == subscriber_membership_2.user.phone_number
+
+      sms = Enum.at(texts_sent, 0)
+      assert sms.message == media_url
+      assert sms.media_urls == []
       assert sms.from_number == to_number
       assert sms.to_number == subscriber_membership_2.user.phone_number
     end
@@ -135,7 +147,7 @@ defmodule QuiltWeb.WebhookControllerTest do
           journal: journal
         )
 
-      TwilioInMemory.force_error_responses()
+      Twilio.force_error_responses()
 
       conn =
         post(conn, Routes.webhook_path(conn, :run),
@@ -148,7 +160,7 @@ defmodule QuiltWeb.WebhookControllerTest do
       assert response(conn, 200) == ""
 
       # Fans out the sms
-      texts_sent = TwilioInMemory.requests()
+      texts_sent = Twilio.requests()
       assert length(texts_sent) == 1
 
       sms = Enum.at(texts_sent, 0)
@@ -187,14 +199,14 @@ defmodule QuiltWeb.WebhookControllerTest do
       assert response(conn, 200) == ""
 
       # Fans out the sms
-      texts_sent = TwilioInMemory.requests()
+      texts_sent = Twilio.requests()
       assert length(texts_sent) == 1
 
       sms = Enum.at(texts_sent, 0)
       assert sms.from_number == to_number
       assert sms.to_number == membership.user.phone_number
-      assert sms.message == ""
-      assert sms.media_urls == [media_url]
+      assert sms.message == media_url
+      assert sms.media_urls == []
     end
 
     test "sends a link to images for international numbers", %{conn: conn} do
@@ -229,13 +241,13 @@ defmodule QuiltWeb.WebhookControllerTest do
       assert response(conn, 200) == ""
 
       # Fans out the sms
-      texts_sent = TwilioInMemory.requests()
+      texts_sent = Twilio.requests()
       assert length(texts_sent) == 2
 
       sms = Enum.at(texts_sent, 0)
       assert sms.from_number == to_number
       assert sms.to_number == membership.user.phone_number
-      assert sms.message == "Attached media: #{media_url}"
+      assert sms.message == media_url
       assert sms.media_urls == []
 
       sms = Enum.at(texts_sent, 1)
@@ -290,7 +302,7 @@ defmodule QuiltWeb.WebhookControllerTest do
       assert membership.subscribed == true
 
       # Sends a welcome sms
-      texts_sent = TwilioInMemory.requests()
+      texts_sent = Twilio.requests()
       assert length(texts_sent) == 1
 
       sms = List.first(texts_sent)
@@ -338,7 +350,7 @@ defmodule QuiltWeb.WebhookControllerTest do
       assert post.journal_id == journal.id
 
       # Sends a response sms
-      texts_sent = TwilioInMemory.requests()
+      texts_sent = Twilio.requests()
       assert length(texts_sent) == 1
 
       sms = List.first(texts_sent)

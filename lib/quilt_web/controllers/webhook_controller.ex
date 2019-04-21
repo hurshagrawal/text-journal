@@ -4,6 +4,7 @@ defmodule QuiltWeb.WebhookController do
   alias Quilt.{Accounts, Content, Sms}
 
   @twilio_blacklist_error_code 21_610
+  @images_client Application.get_env(:quilt, :images_client)
 
   @doc """
   Incoming webhook from Twilio when someone sends an
@@ -36,7 +37,11 @@ defmodule QuiltWeb.WebhookController do
             |> Enum.to_list()
             |> Enum.map(fn i ->
               {:ok, url} = Map.fetch(params, "MediaUrl#{i}")
-              url
+
+              case @images_client.get_resolved_url(url) do
+                {:ok, resolved_url} -> resolved_url
+                {:error, _} -> url
+              end
             end)
           else
             []

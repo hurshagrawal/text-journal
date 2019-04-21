@@ -80,5 +80,6 @@ config :quilt,
   twilio_twiml_sid: System.get_env("TWILIO_TWIML_SID")
 
 # Dynamically loaded modules
-config :quilt, :twilio_client, Quilt.Sms.Twilio
+config :quilt, :twilio_client, Quilt.Sms.Twilio.Client
+config :quilt, :images_client, Quilt.Images.Client
 config :quilt, :admin_user_ids, [1, 2, 8]

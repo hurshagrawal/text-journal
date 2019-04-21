@@ -5,11 +5,11 @@ defmodule QuiltWeb.UserControllerTest do
 
   alias Quilt.Repo
   alias Quilt.Accounts.User
-  alias Quilt.Sms.TwilioInMemory
+  alias Quilt.Sms.Twilio.InMemory, as: Twilio
   alias QuiltWeb.Guardian.Plug, as: Guardian
 
   setup do
-    Quilt.Sms.TwilioInMemory.reset()
+    Twilio.reset()
   end
 
   describe "get :index" do
@@ -69,7 +69,7 @@ defmodule QuiltWeb.UserControllerTest do
       assert user.name == name
       assert user.verification_code != nil
 
-      texts_sent = TwilioInMemory.requests()
+      texts_sent = Twilio.requests()
       assert length(texts_sent) == 1
 
       sms = List.first(texts_sent)
@@ -172,7 +172,7 @@ defmodule QuiltWeb.UserControllerTest do
       user = Repo.get_by(User, phone_number: phone_number)
       assert user.verification_code != nil
 
-      texts_sent = TwilioInMemory.requests()
+      texts_sent = Twilio.requests()
       assert length(texts_sent) == 1
 
       sms = List.first(texts_sent)

@@ -1,4 +1,4 @@
-defmodule Quilt.Sms.Twilio do
+defmodule Quilt.Sms.Twilio.Client do
   alias Quilt.Sms.Client
 
   def get_available_phone_numbers do
