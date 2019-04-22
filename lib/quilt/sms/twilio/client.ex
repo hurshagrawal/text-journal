@@ -49,7 +49,12 @@ defmodule Quilt.Sms.Twilio.Client do
 
     case send_message(request_body) do
       {:ok, body} ->
-        IO.puts("Twilio: SMS sent successfully to #{to_number}")
+        IO.puts(
+          "Twilio: SMS sent successfully to #{to_number} with body- #{
+            inspect(body)
+          }"
+        )
+
         {:ok, body}
 
       {:error, response_body} ->
