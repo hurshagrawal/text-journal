@@ -5,9 +5,6 @@ defmodule QuiltWeb.WebhookController do
 
   @twilio_blacklist_error_code 21_610
   @images_client Application.get_env(:quilt, :images_client)
-  @number_whitelist ["+15409864232", "+17029450767"]
-
-  plug :enable_only_for_whitelist
 
   @doc """
   Incoming webhook from Twilio when someone sends an
@@ -133,17 +130,5 @@ defmodule QuiltWeb.WebhookController do
     end
 
     send_resp(conn, 200, "")
-  end
-
-  def enable_only_for_whitelist(conn, _) do
-    %{"To" => to_number} = conn.params
-
-    if Enum.member?(@number_whitelist, to_number) do
-      conn
-    else
-      conn
-      |> send_resp(200, "")
-      |> halt()
-    end
   end
 end
