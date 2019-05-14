@@ -1,6 +1,6 @@
-# Quilt (Text Journal)
+# Text Journal (quilt)
 
-To start your Phoenix server:
+To start the server:
 
   * Install dependencies with `mix deps.get`
   * Create and migrate your database with `mix ecto.setup`
